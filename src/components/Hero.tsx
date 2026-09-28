@@ -150,7 +150,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenContact }) => {
               </button>
 
               <a
-                href="file:///d:/Kishoresharma_Web_Developer_Resume.pdf"
+                href={PORTFOLIO_DATA.personal.resumeUrl}
+                download="Kishoresharma_Web_Developer_Resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-5 py-3.5 rounded-xl glass-card text-xs font-semibold text-slate-300 hover:text-indigo-300 border border-slate-700/80 hover:border-indigo-500/40 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"

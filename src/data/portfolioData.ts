@@ -50,6 +50,7 @@ export const PORTFOLIO_DATA = {
     location: "Salem, Tamil Nadu, India",
     linkedin: "https://linkedin.com",
     github: "https://github.com",
+    resumeUrl: "/Kishoresharma_Web_Developer_Resume.pdf",
     degree: "B.Tech – Information Technology",
     college: "Sona College of Technology",
     cgpa: "8.0 / 10",

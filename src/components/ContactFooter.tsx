@@ -182,7 +182,8 @@ _Sent via Kishoresharma Portfolio Terminal_`;
                 <span className="text-xs text-slate-400">Download formatted PDF document</span>
               </div>
               <a
-                href="file:///d:/Kishoresharma_Web_Developer_Resume.pdf"
+                href={PORTFOLIO_DATA.personal.resumeUrl}
+                download="Kishoresharma_Web_Developer_Resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center gap-2 transition-colors shadow-lg shadow-indigo-600/30 cursor-pointer"
