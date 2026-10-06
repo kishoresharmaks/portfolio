@@ -27,7 +27,7 @@ const PASSCODE_KEY = 'kishoresharma_beacon_admin_pin';
 const SUPABASE_CONFIG_KEY = 'kishoresharma_beacon_supabase_cfg';
 
 // Default Admin PIN (Can be changed in dashboard settings)
-export const DEFAULT_ADMIN_PIN = '123456';
+export const DEFAULT_ADMIN_PIN = '052005';
 
 // Supabase helper
 const getSupabaseClient = () => {

@@ -99,7 +99,7 @@ export const BeaconDashboard: React.FC<BeaconDashboardProps> = ({ onBackToPortfo
       sessionStorage.setItem('kishoresharma_beacon_authed', 'true');
       setPinError(null);
     } else {
-      setPinError('Invalid passcode. Default PIN is 123456');
+      setPinError('Invalid passcode');
     }
   };
 
@@ -284,7 +284,7 @@ export const BeaconDashboard: React.FC<BeaconDashboardProps> = ({ onBackToPortfo
                   type="password"
                   value={inputPin}
                   onChange={(e) => setInputPin(e.target.value)}
-                  placeholder="Enter PIN (Default: 123456)"
+                  placeholder="Enter PIN"
                   className="w-full px-4 py-3 bg-[#080B14] border border-slate-700/80 focus:border-indigo-500 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 font-mono text-sm tracking-widest transition-all"
                   autoFocus
                 />
@@ -305,12 +305,6 @@ export const BeaconDashboard: React.FC<BeaconDashboardProps> = ({ onBackToPortfo
               <span>Authenticate Session</span>
             </button>
           </form>
-
-          <div className="mt-6 pt-4 border-t border-slate-800/80 text-center">
-            <p className="text-[11px] text-slate-500 font-mono">
-              Default Admin PIN: <code className="text-indigo-400 bg-indigo-950/60 px-1.5 py-0.5 rounded border border-indigo-800/40">123456</code>
-            </p>
-          </div>
         </div>
       </div>
     );
