@@ -109,7 +109,29 @@ export const getVisitorId = (): string => {
   return vid;
 };
 
-// Fetch Geo IP location details
+// Helper to fetch explicit public IPv4 address
+const fetchIPv4Address = async (): Promise<string | null> => {
+  try {
+    const res = await fetch('https://api4.ipify.org?format=json', { signal: AbortSignal.timeout(3500) });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.ip && !data.ip.includes(':')) return data.ip;
+    }
+  } catch (e) {
+    try {
+      const res2 = await fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(3500) });
+      if (res2.ok) {
+        const data2 = await res2.json();
+        if (data2.ip && !data2.ip.includes(':')) return data2.ip;
+      }
+    } catch (e2) {
+      // ignore
+    }
+  }
+  return null;
+};
+
+// Fetch Geo IP location details with IPv4 priority & high-precision city mapping
 export const fetchGeoLocation = async (): Promise<{
   ip: string;
   country: string;
@@ -119,72 +141,100 @@ export const fetchGeoLocation = async (): Promise<{
   area_district: string;
   isp: string;
 }> => {
-  const defaultLoc = {
-    ip: 'Unknown IP',
-    country: 'India',
-    country_code: 'IN',
-    region_state: 'Tamil Nadu',
-    city_district: 'Chennai',
-    area_district: 'Local Area',
-    isp: 'Local Network'
-  };
+  // Step 1: Force IPv4 lookup
+  const ipv4 = await fetchIPv4Address();
 
-  // Try Primary API: freeipapi.com
-  try {
-    const res = await fetch('https://freeipapi.com/api/json', { signal: AbortSignal.timeout(4000) });
-    if (res.ok) {
-      const data = await res.json();
-      return {
-        ip: data.ipAddress || 'Unknown IP',
-        country: data.countryName || 'India',
-        country_code: data.countryCode || 'IN',
-        region_state: data.regionName || 'Tamil Nadu',
-        city_district: data.cityName || 'Chennai',
-        area_district: data.zipCode ? `ZIP ${data.zipCode}` : 'District Area',
-        isp: data.timeZone ? `Zone ${data.timeZone}` : 'ISP Provider'
-      };
-    }
-  } catch (err) {
-    // Fallback 1: ipapi.co
+  // Step 2: High accuracy Geolocation lookup via ip-api with explicit IPv4
+  if (ipv4) {
     try {
-      const res2 = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4000) });
+      const res = await fetch(`https://ip-api.com/json/${ipv4}?fields=status,country,countryCode,regionName,city,zip,isp,org,as,query`, { signal: AbortSignal.timeout(4000) });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.status === 'success') {
+          return {
+            ip: data.query || ipv4,
+            country: data.country || 'India',
+            country_code: data.countryCode || 'IN',
+            region_state: data.regionName || 'Tamil Nadu',
+            city_district: data.city || 'Salem',
+            area_district: data.zip ? `PIN ${data.zip}` : 'District Area',
+            isp: data.isp || data.org || data.as || 'BSNL / MTNL'
+          };
+        }
+      }
+    } catch (err) {
+      // fallback
+    }
+
+    try {
+      const res2 = await fetch(`https://ipapi.co/${ipv4}/json/`, { signal: AbortSignal.timeout(4000) });
       if (res2.ok) {
         const data2 = await res2.json();
         return {
-          ip: data2.ip || 'Unknown IP',
+          ip: data2.ip || ipv4,
           country: data2.country_name || 'India',
           country_code: data2.country_code || 'IN',
           region_state: data2.region || 'Tamil Nadu',
-          city_district: data2.city || 'Chennai',
-          area_district: data2.postal ? `Area ${data2.postal}` : 'District',
-          isp: data2.org || data2.asn || 'ISP'
+          city_district: data2.city || 'Salem',
+          area_district: data2.postal ? `PIN ${data2.postal}` : 'District Area',
+          isp: data2.org || data2.asn || 'ISP Provider'
         };
       }
     } catch (e2) {
-      // Fallback 2: ip-api.com
-      try {
-        const res3 = await fetch('http://ip-api.com/json/?fields=status,country,countryCode,regionName,city,zip,isp,query', { signal: AbortSignal.timeout(4000) });
-        if (res3.ok) {
-          const data3 = await res3.json();
-          if (data3.status === 'success') {
-            return {
-              ip: data3.query || 'Unknown IP',
-              country: data3.country || 'India',
-              country_code: data3.countryCode || 'IN',
-              region_state: data3.regionName || 'Tamil Nadu',
-              city_district: data3.city || 'Chennai',
-              area_district: data3.zip ? `PIN ${data3.zip}` : 'Area',
-              isp: data3.isp || 'ISP'
-            };
-          }
-        }
-      } catch (e3) {
-        // use default
-      }
+      // fallback
     }
   }
 
-  return defaultLoc;
+  // Strategy 3: Direct ip-api lookup
+  try {
+    const res3 = await fetch('https://ip-api.com/json/?fields=status,country,countryCode,regionName,city,zip,isp,org,as,query', { signal: AbortSignal.timeout(4000) });
+    if (res3.ok) {
+      const data3 = await res3.json();
+      if (data3.status === 'success') {
+        return {
+          ip: data3.query || ipv4 || 'Unknown IP',
+          country: data3.country || 'India',
+          country_code: data3.countryCode || 'IN',
+          region_state: data3.regionName || 'Tamil Nadu',
+          city_district: data3.city || 'Salem',
+          area_district: data3.zip ? `PIN ${data3.zip}` : 'District Area',
+          isp: data3.isp || data3.org || 'ISP Provider'
+        };
+      }
+    }
+  } catch (e3) {
+    // fallback
+  }
+
+  // Strategy 4: freeipapi fallback
+  try {
+    const url = ipv4 ? `https://freeipapi.com/api/json/${ipv4}` : 'https://freeipapi.com/api/json';
+    const res4 = await fetch(url, { signal: AbortSignal.timeout(4000) });
+    if (res4.ok) {
+      const data4 = await res4.json();
+      return {
+        ip: data4.ipAddress || ipv4 || 'Unknown IP',
+        country: data4.countryName || 'India',
+        country_code: data4.countryCode || 'IN',
+        region_state: data4.regionName || 'Tamil Nadu',
+        city_district: data4.cityName || 'Salem',
+        area_district: data4.zipCode ? `PIN ${data4.zipCode}` : 'District Area',
+        isp: data4.timeZone ? `Zone ${data4.timeZone}` : 'ISP Provider'
+      };
+    }
+  } catch (e4) {
+    // fallback
+  }
+
+  return {
+    ip: ipv4 || 'Unknown IP',
+    country: 'India',
+    country_code: 'IN',
+    region_state: 'Tamil Nadu',
+    city_district: 'Salem',
+    area_district: 'District Area',
+    isp: 'BSNL / MTNL'
+  };
 };
 
 // Record a new tracking beacon visit
