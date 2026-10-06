@@ -131,6 +131,40 @@ const fetchIPv4Address = async (): Promise<string | null> => {
   return null;
 };
 
+// ipgeolocation.io API Key
+export const HARDCODED_IPGEOLOCATION_KEY = 'ccc967cd86b3448393807c662f91d0a7';
+
+// Primary High-Accuracy Geolocation via ipgeolocation.io
+const fetchIPGeolocationIO = async (ipParam?: string | null) => {
+  const apiKey = (import.meta as any).env?.VITE_IPGEOLOCATION_API_KEY || HARDCODED_IPGEOLOCATION_KEY;
+  try {
+    const url = ipParam 
+      ? `https://api.ipgeolocation.io/ipgeo?apiKey=${apiKey}&ip=${ipParam}`
+      : `https://api.ipgeolocation.io/ipgeo?apiKey=${apiKey}`;
+    
+    const res = await fetch(url, { signal: AbortSignal.timeout(4500) });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.ip) {
+        return {
+          ip: data.ip,
+          country: data.country_name || 'India',
+          country_code: data.country_code2 || 'IN',
+          region_state: data.state_prov || 'Tamil Nadu',
+          city_district: data.city || data.district || 'Salem',
+          area_district: data.district && data.city !== data.district 
+            ? `${data.district} (PIN ${data.zipcode || ''})`.trim()
+            : (data.zipcode ? `PIN ${data.zipcode}` : 'District Area'),
+          isp: data.isp || data.organization || 'Bharat Sanchar Nigam Limited'
+        };
+      }
+    }
+  } catch (err) {
+    console.warn('ipgeolocation.io lookup fallback:', err);
+  }
+  return null;
+};
+
 // Fetch Geo IP location details with IPv4 priority & high-precision city mapping
 export const fetchGeoLocation = async (): Promise<{
   ip: string;
@@ -144,7 +178,13 @@ export const fetchGeoLocation = async (): Promise<{
   // Step 1: Force IPv4 lookup
   const ipv4 = await fetchIPv4Address();
 
-  // Step 2: High accuracy Geolocation lookup via ip-api with explicit IPv4
+  // Strategy 1: Primary - ipgeolocation.io API (Using provided API Key)
+  const ipgeoData = await fetchIPGeolocationIO(ipv4);
+  if (ipgeoData) {
+    return ipgeoData;
+  }
+
+  // Strategy 2: High accuracy Geolocation lookup via ip-api with explicit IPv4
   if (ipv4) {
     try {
       const res = await fetch(`https://ip-api.com/json/${ipv4}?fields=status,country,countryCode,regionName,city,zip,isp,org,as,query`, { signal: AbortSignal.timeout(4000) });
