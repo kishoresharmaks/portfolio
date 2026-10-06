@@ -23,7 +23,11 @@ import {
   Zap,
   Activity,
   Layers,
-  Database
+  Database,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight
 } from 'lucide-react';
 import { 
   AnalyticsRecord, 
@@ -53,6 +57,15 @@ export const BeaconDashboard: React.FC<BeaconDashboardProps> = ({ onBackToPortfo
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [activeFilter, setActiveFilter] = useState<'ALL' | 'INDIA' | 'MOBILE' | 'TODAY'>('ALL');
   const [selectedRecord, setSelectedRecord] = useState<AnalyticsRecord | null>(null);
+
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+
+  // Reset page to 1 when search term or filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, activeFilter]);
 
   // Settings Modal State
   const [showSettings, setShowSettings] = useState<boolean>(false);
@@ -245,6 +258,15 @@ export const BeaconDashboard: React.FC<BeaconDashboardProps> = ({ onBackToPortfo
       r.referrer.toLowerCase().includes(term)
     );
   });
+
+  // Pagination Calculations
+  const totalFilteredRecords = filteredRecords.length;
+  const totalPages = Math.ceil(totalFilteredRecords / pageSize) || 1;
+  const safeCurrentPage = Math.min(Math.max(currentPage, 1), totalPages);
+  
+  const startIndex = (safeCurrentPage - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, totalFilteredRecords);
+  const paginatedRecords = filteredRecords.slice(startIndex, endIndex);
 
   // --- 1. LOGIN SCREEN ---
   if (!isAuthenticated) {
@@ -655,7 +677,7 @@ export const BeaconDashboard: React.FC<BeaconDashboardProps> = ({ onBackToPortfo
                   </td>
                 </tr>
               ) : (
-                filteredRecords.map((r) => (
+                paginatedRecords.map((r) => (
                   <tr key={r.id} className="hover:bg-slate-800/40 transition-colors">
                     <td className="py-3 px-3 text-slate-400 whitespace-nowrap">
                       {new Date(r.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
@@ -703,6 +725,78 @@ export const BeaconDashboard: React.FC<BeaconDashboardProps> = ({ onBackToPortfo
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controls Footer */}
+        {totalFilteredRecords > 0 && (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-800/80 font-mono text-xs text-slate-400">
+            {/* Range info & Page size picker */}
+            <div className="flex flex-wrap items-center gap-3">
+              <span>
+                Showing <strong className="text-white">{startIndex + 1}</strong> - <strong className="text-white">{endIndex}</strong> of <strong className="text-cyan-400">{totalFilteredRecords}</strong> logs
+              </span>
+              
+              <div className="flex items-center gap-1.5 border-l border-slate-800 pl-3">
+                <span className="text-slate-500">Per page:</span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className="bg-[#070A14] border border-slate-800 text-slate-200 rounded px-2 py-1 focus:outline-none focus:border-indigo-500 cursor-pointer"
+                >
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Navigation Page Buttons */}
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setCurrentPage(1)}
+                disabled={safeCurrentPage === 1}
+                className="p-1.5 rounded-lg bg-[#070A14] hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed border border-slate-800 text-slate-300 transition-colors"
+                title="First Page"
+              >
+                <ChevronsLeft className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={safeCurrentPage === 1}
+                className="p-1.5 rounded-lg bg-[#070A14] hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed border border-slate-800 text-slate-300 transition-colors"
+                title="Previous Page"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+
+              <div className="px-3 py-1 font-bold text-white bg-[#070A14] border border-slate-800 rounded-lg text-xs">
+                Page <span className="text-indigo-400">{safeCurrentPage}</span> of <span className="text-slate-300">{totalPages}</span>
+              </div>
+
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={safeCurrentPage === totalPages}
+                className="p-1.5 rounded-lg bg-[#070A14] hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed border border-slate-800 text-slate-300 transition-colors"
+                title="Next Page"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={safeCurrentPage === totalPages}
+                className="p-1.5 rounded-lg bg-[#070A14] hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed border border-slate-800 text-slate-300 transition-colors"
+                title="Last Page"
+              >
+                <ChevronsRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Detail Inspector Modal */}
