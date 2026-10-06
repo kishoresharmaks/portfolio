@@ -57,10 +57,10 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#090D16] text-slate-100 font-sans selection:bg-indigo-500 selection:text-white w-full max-w-full overflow-x-hidden relative">
+    <div className="min-h-screen bg-[#090D16] text-slate-100 font-sans selection:bg-indigo-500 selection:text-white w-full relative">
       <BeaconTracker />
       <Navbar onOpenContact={scrollToContact} />
-      <main className="w-full max-w-full overflow-x-hidden">
+      <main className="w-full">
         <Hero onOpenContact={scrollToContact} />
         <Skills />
         <Projects />
