@@ -392,8 +392,13 @@ _Sent via Kishoresharma Portfolio Terminal_`;
             <Code2 className="w-4 h-4 text-indigo-400" />
             <span>&copy; 2026 {PORTFOLIO_DATA.personal.name}. All rights reserved.</span>
           </div>
-          <div className="flex items-center gap-1.5 text-slate-500">
-            <span>Built with React, Next.js architecture & Tailwind CSS</span>
+          <div className="flex items-center gap-3 text-slate-500">
+            <span>Built with React & Tailwind CSS</span>
+            <span>•</span>
+            <a href="#beacon" className="text-slate-400 hover:text-indigo-400 transition-colors flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Beacon Console</span>
+            </a>
           </div>
         </div>
 
