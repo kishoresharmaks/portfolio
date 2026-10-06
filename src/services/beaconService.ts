@@ -26,7 +26,11 @@ const VISITOR_KEY = 'kishoresharma_beacon_visitor_id';
 const PASSCODE_KEY = 'kishoresharma_beacon_admin_pin';
 const SUPABASE_CONFIG_KEY = 'kishoresharma_beacon_supabase_cfg';
 
-// Default Admin PIN (Can be changed in dashboard settings)
+// Hardcoded Supabase Credentials
+export const HARDCODED_SUPABASE_URL = 'https://iaxpebarwkzncjdjovgc.supabase.co';
+export const HARDCODED_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlheHBlYmFyd2t6bmNqZGpvdmdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNTE5ODQsImV4cCI6MjEwNjgyNzk4NH0.HA9RWNUFeftSrqOQIQbePOJrqpteDLEoDOzGCIp20NA';
+
+// Default Admin PIN
 export const DEFAULT_ADMIN_PIN = '052005';
 
 // Supabase helper
@@ -42,8 +46,8 @@ const getSupabaseClient = () => {
     // ignore
   }
 
-  const url = envUrl || savedCfg.url;
-  const key = envKey || savedCfg.key;
+  const url = envUrl || savedCfg.url || HARDCODED_SUPABASE_URL;
+  const key = envKey || savedCfg.key || HARDCODED_SUPABASE_KEY;
 
   if (url && key) {
     try {
@@ -332,12 +336,15 @@ export const saveSupabaseConfig = (url: string, key: string): void => {
 export const getSupabaseConfig = (): { url: string; key: string } => {
   try {
     const raw = localStorage.getItem(SUPABASE_CONFIG_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed.url && parsed.key) return parsed;
+    }
   } catch (e) {
     // ignore
   }
   return {
-    url: (import.meta as any).env?.VITE_SUPABASE_URL || '',
-    key: (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || ''
+    url: (import.meta as any).env?.VITE_SUPABASE_URL || HARDCODED_SUPABASE_URL,
+    key: (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || HARDCODED_SUPABASE_KEY
   };
 };
