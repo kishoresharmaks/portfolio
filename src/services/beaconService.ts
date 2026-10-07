@@ -135,30 +135,6 @@ const fetchIPv4Address = async (): Promise<string | null> => {
   return null;
 };
 
-// Helper to query browser GPS if available
-const fetchBrowserGPSCoordinates = (): Promise<{ latitude: number; longitude: number; accuracy: number } | null> => {
-  return new Promise((resolve) => {
-    if (typeof navigator === 'undefined' || !navigator.geolocation) {
-      resolve(null);
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        resolve({
-          latitude: pos.coords.latitude,
-          longitude: pos.coords.longitude,
-          accuracy: pos.coords.accuracy
-        });
-      },
-      (err) => {
-        resolve(null);
-      },
-      { enableHighAccuracy: true, timeout: 2500, maximumAge: 60000 }
-    );
-  });
-};
-
 // ipgeolocation.io API Key
 export const HARDCODED_IPGEOLOCATION_KEY = 'ccc967cd86b3448393807c662f91d0a7';
 
@@ -326,15 +302,6 @@ export const recordBeaconVisit = async (): Promise<AnalyticsRecord | null> => {
     }
   }
 
-  // Attempt high precision GPS coordinates if browser allows
-  const gps = await fetchBrowserGPSCoordinates();
-  if (gps) {
-    geo.latitude = gps.latitude;
-    geo.longitude = gps.longitude;
-    geo.loc_source = `GPS High Precision (±${Math.round(gps.accuracy)}m)`;
-    geo.maps_url = `https://www.google.com/maps?q=${gps.latitude},${gps.longitude}`;
-  }
-
   const record: AnalyticsRecord = {
     id: 'rec_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now().toString(36),
     visitor_id: visitorId,
@@ -367,7 +334,16 @@ export const recordBeaconVisit = async (): Promise<AnalyticsRecord | null> => {
   const supabase = getSupabaseClient();
   if (supabase) {
     try {
-      await supabase.from('beacon_analytics').insert([record]);
+      const { error } = await supabase.from('beacon_analytics').insert([record]);
+      if (error && (error.code === 'PGRST204' || (error.message && error.message.includes('column')))) {
+        // Fallback retry without lat/lng columns if Supabase table schema hasn't been altered yet
+        const fallbackRecord = { ...record };
+        delete (fallbackRecord as any).latitude;
+        delete (fallbackRecord as any).longitude;
+        delete (fallbackRecord as any).loc_source;
+        delete (fallbackRecord as any).maps_url;
+        await supabase.from('beacon_analytics').insert([fallbackRecord]);
+      }
     } catch (e) {
       console.warn('Supabase sync warning:', e);
     }
