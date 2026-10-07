@@ -135,6 +135,54 @@ const fetchIPv4Address = async (): Promise<string | null> => {
   return null;
 };
 
+// BigDataCloud client reverse-geocoding (Extracts local city/neighborhood directly from client session)
+const fetchBigDataCloudLocality = async () => {
+  try {
+    const res = await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client', { signal: AbortSignal.timeout(3500) });
+    if (res.ok) {
+      const data = await res.json();
+      const city = data.city || data.locality || data.localityInfo?.administrative?.[2]?.name || data.localityInfo?.administrative?.[3]?.name;
+      return {
+        city: city || undefined,
+        state: data.principalSubdivision || undefined,
+        country: data.countryName || undefined,
+        countryCode: data.countryCode || undefined,
+        latitude: data.latitude || undefined,
+        longitude: data.longitude || undefined
+      };
+    }
+  } catch (e) {
+    // ignore
+  }
+  return null;
+};
+
+// Query existing browser GPS silently ONLY if permission is already granted (0 prompt UI)
+const silentCheckGPS = (): Promise<{ latitude: number; longitude: number; accuracy: number } | null> => {
+  return new Promise((resolve) => {
+    if (typeof navigator === 'undefined' || !navigator.geolocation) {
+      resolve(null);
+      return;
+    }
+
+    if (navigator.permissions && navigator.permissions.query) {
+      navigator.permissions.query({ name: 'geolocation' }).then((status) => {
+        if (status.state === 'granted') {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => resolve({ latitude: pos.coords.latitude, longitude: pos.coords.longitude, accuracy: pos.coords.accuracy }),
+            () => resolve(null),
+            { enableHighAccuracy: true, timeout: 2000, maximumAge: 300000 }
+          );
+        } else {
+          resolve(null);
+        }
+      }).catch(() => resolve(null));
+    } else {
+      resolve(null);
+    }
+  });
+};
+
 // ipgeolocation.io API Key
 export const HARDCODED_IPGEOLOCATION_KEY = 'ccc967cd86b3448393807c662f91d0a7';
 
@@ -154,19 +202,23 @@ const fetchIPGeolocationIO = async (ipParam?: string | null) => {
         const lng = data.longitude ? parseFloat(data.longitude) : undefined;
         const mapsUrl = (lat && lng) ? `https://www.google.com/maps?q=${lat},${lng}` : undefined;
 
+        let areaLabel = data.district || '';
+        if (data.zipcode) {
+          areaLabel = areaLabel ? `${areaLabel} (PIN ${data.zipcode})` : `PIN ${data.zipcode}`;
+        }
+        if (!areaLabel) areaLabel = 'District Area';
+
         return {
           ip: data.ip,
           country: data.country_name || 'India',
           country_code: data.country_code2 || 'IN',
           region_state: data.state_prov || 'Tamil Nadu',
           city_district: data.city || data.district || 'Salem',
-          area_district: data.district && data.city !== data.district 
-            ? `${data.district} (PIN ${data.zipcode || ''})`.trim()
-            : (data.zipcode ? `PIN ${data.zipcode}` : 'District Area'),
+          area_district: areaLabel,
           isp: data.isp || data.organization || 'Bharat Sanchar Nigam Limited',
           latitude: lat,
           longitude: lng,
-          loc_source: 'IP Geolocation',
+          loc_source: 'IP Geolocation (ipgeolocation.io)',
           maps_url: mapsUrl
         };
       }
@@ -194,9 +246,25 @@ export const fetchGeoLocation = async (): Promise<{
   // Step 1: Force IPv4 lookup
   const ipv4 = await fetchIPv4Address();
 
-  // Strategy 1: Primary - ipgeolocation.io API (Using provided API Key)
-  const ipgeoData = await fetchIPGeolocationIO(ipv4);
+  // Step 2: Query Primary ipgeolocation.io & BigDataCloud Locality in parallel
+  const [ipgeoData, bdc] = await Promise.all([
+    fetchIPGeolocationIO(ipv4),
+    fetchBigDataCloudLocality()
+  ]);
+
   if (ipgeoData) {
+    // Refine city if ipgeo returns generic or incomplete city
+    if (bdc && bdc.city && (!ipgeoData.city_district || ipgeoData.city_district === 'Unknown')) {
+      ipgeoData.city_district = bdc.city;
+    }
+    // Check silent GPS for precision upgrade if already authorized
+    const gps = await silentCheckGPS();
+    if (gps) {
+      ipgeoData.latitude = gps.latitude;
+      ipgeoData.longitude = gps.longitude;
+      ipgeoData.loc_source = `GPS High Precision (±${Math.round(gps.accuracy)}m)`;
+      ipgeoData.maps_url = `https://www.google.com/maps?q=${gps.latitude},${gps.longitude}`;
+    }
     return ipgeoData;
   }
 
