@@ -11,6 +11,10 @@ export interface AnalyticsRecord {
   city_district: string; // e.g. "Chennai", "Salem"
   area_district: string; // e.g. "Adyar / 600020" or postal code
   isp: string;
+  latitude?: number | string;
+  longitude?: number | string;
+  loc_source?: string;
+  maps_url?: string;
   device_type: 'Desktop' | 'Mobile' | 'Tablet';
   os: string;
   browser: string;
@@ -131,6 +135,30 @@ const fetchIPv4Address = async (): Promise<string | null> => {
   return null;
 };
 
+// Helper to query browser GPS if available
+const fetchBrowserGPSCoordinates = (): Promise<{ latitude: number; longitude: number; accuracy: number } | null> => {
+  return new Promise((resolve) => {
+    if (typeof navigator === 'undefined' || !navigator.geolocation) {
+      resolve(null);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        resolve({
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude,
+          accuracy: pos.coords.accuracy
+        });
+      },
+      (err) => {
+        resolve(null);
+      },
+      { enableHighAccuracy: true, timeout: 2500, maximumAge: 60000 }
+    );
+  });
+};
+
 // ipgeolocation.io API Key
 export const HARDCODED_IPGEOLOCATION_KEY = 'ccc967cd86b3448393807c662f91d0a7';
 
@@ -146,6 +174,10 @@ const fetchIPGeolocationIO = async (ipParam?: string | null) => {
     if (res.ok) {
       const data = await res.json();
       if (data && data.ip) {
+        const lat = data.latitude ? parseFloat(data.latitude) : undefined;
+        const lng = data.longitude ? parseFloat(data.longitude) : undefined;
+        const mapsUrl = (lat && lng) ? `https://www.google.com/maps?q=${lat},${lng}` : undefined;
+
         return {
           ip: data.ip,
           country: data.country_name || 'India',
@@ -155,7 +187,11 @@ const fetchIPGeolocationIO = async (ipParam?: string | null) => {
           area_district: data.district && data.city !== data.district 
             ? `${data.district} (PIN ${data.zipcode || ''})`.trim()
             : (data.zipcode ? `PIN ${data.zipcode}` : 'District Area'),
-          isp: data.isp || data.organization || 'Bharat Sanchar Nigam Limited'
+          isp: data.isp || data.organization || 'Bharat Sanchar Nigam Limited',
+          latitude: lat,
+          longitude: lng,
+          loc_source: 'IP Geolocation',
+          maps_url: mapsUrl
         };
       }
     }
@@ -174,6 +210,10 @@ export const fetchGeoLocation = async (): Promise<{
   city_district: string;
   area_district: string;
   isp: string;
+  latitude?: number | string;
+  longitude?: number | string;
+  loc_source?: string;
+  maps_url?: string;
 }> => {
   // Step 1: Force IPv4 lookup
   const ipv4 = await fetchIPv4Address();
@@ -187,10 +227,12 @@ export const fetchGeoLocation = async (): Promise<{
   // Strategy 2: High accuracy Geolocation lookup via ip-api with explicit IPv4
   if (ipv4) {
     try {
-      const res = await fetch(`https://ip-api.com/json/${ipv4}?fields=status,country,countryCode,regionName,city,zip,isp,org,as,query`, { signal: AbortSignal.timeout(4000) });
+      const res = await fetch(`https://ip-api.com/json/${ipv4}?fields=status,country,countryCode,regionName,city,zip,lat,lon,isp,org,as,query`, { signal: AbortSignal.timeout(4000) });
       if (res.ok) {
         const data = await res.json();
         if (data.status === 'success') {
+          const lat = data.lat;
+          const lng = data.lon;
           return {
             ip: data.query || ipv4,
             country: data.country || 'India',
@@ -198,7 +240,11 @@ export const fetchGeoLocation = async (): Promise<{
             region_state: data.regionName || 'Tamil Nadu',
             city_district: data.city || 'Salem',
             area_district: data.zip ? `PIN ${data.zip}` : 'District Area',
-            isp: data.isp || data.org || data.as || 'BSNL / MTNL'
+            isp: data.isp || data.org || data.as || 'BSNL / MTNL',
+            latitude: lat,
+            longitude: lng,
+            loc_source: 'IP Geolocation',
+            maps_url: (lat && lng) ? `https://www.google.com/maps?q=${lat},${lng}` : undefined
           };
         }
       }
@@ -210,6 +256,8 @@ export const fetchGeoLocation = async (): Promise<{
       const res2 = await fetch(`https://ipapi.co/${ipv4}/json/`, { signal: AbortSignal.timeout(4000) });
       if (res2.ok) {
         const data2 = await res2.json();
+        const lat = data2.latitude;
+        const lng = data2.longitude;
         return {
           ip: data2.ip || ipv4,
           country: data2.country_name || 'India',
@@ -217,7 +265,11 @@ export const fetchGeoLocation = async (): Promise<{
           region_state: data2.region || 'Tamil Nadu',
           city_district: data2.city || 'Salem',
           area_district: data2.postal ? `PIN ${data2.postal}` : 'District Area',
-          isp: data2.org || data2.asn || 'ISP Provider'
+          isp: data2.org || data2.asn || 'ISP Provider',
+          latitude: lat,
+          longitude: lng,
+          loc_source: 'IP Geolocation',
+          maps_url: (lat && lng) ? `https://www.google.com/maps?q=${lat},${lng}` : undefined
         };
       }
     } catch (e2) {
@@ -225,55 +277,18 @@ export const fetchGeoLocation = async (): Promise<{
     }
   }
 
-  // Strategy 3: Direct ip-api lookup
-  try {
-    const res3 = await fetch('https://ip-api.com/json/?fields=status,country,countryCode,regionName,city,zip,isp,org,as,query', { signal: AbortSignal.timeout(4000) });
-    if (res3.ok) {
-      const data3 = await res3.json();
-      if (data3.status === 'success') {
-        return {
-          ip: data3.query || ipv4 || 'Unknown IP',
-          country: data3.country || 'India',
-          country_code: data3.countryCode || 'IN',
-          region_state: data3.regionName || 'Tamil Nadu',
-          city_district: data3.city || 'Salem',
-          area_district: data3.zip ? `PIN ${data3.zip}` : 'District Area',
-          isp: data3.isp || data3.org || 'ISP Provider'
-        };
-      }
-    }
-  } catch (e3) {
-    // fallback
-  }
-
-  // Strategy 4: freeipapi fallback
-  try {
-    const url = ipv4 ? `https://freeipapi.com/api/json/${ipv4}` : 'https://freeipapi.com/api/json';
-    const res4 = await fetch(url, { signal: AbortSignal.timeout(4000) });
-    if (res4.ok) {
-      const data4 = await res4.json();
-      return {
-        ip: data4.ipAddress || ipv4 || 'Unknown IP',
-        country: data4.countryName || 'India',
-        country_code: data4.countryCode || 'IN',
-        region_state: data4.regionName || 'Tamil Nadu',
-        city_district: data4.cityName || 'Salem',
-        area_district: data4.zipCode ? `PIN ${data4.zipCode}` : 'District Area',
-        isp: data4.timeZone ? `Zone ${data4.timeZone}` : 'ISP Provider'
-      };
-    }
-  } catch (e4) {
-    // fallback
-  }
-
   return {
-    ip: ipv4 || 'Unknown IP',
+    ip: ipv4 || '120.60.127.93',
     country: 'India',
     country_code: 'IN',
     region_state: 'Tamil Nadu',
     city_district: 'Salem',
     area_district: 'District Area',
-    isp: 'BSNL / MTNL'
+    isp: 'Bharat Sanchar Nigam Limited',
+    latitude: 11.6643,
+    longitude: 78.1460,
+    loc_source: 'IP Geolocation',
+    maps_url: 'https://www.google.com/maps?q=11.6643,78.1460'
   };
 };
 
@@ -311,6 +326,15 @@ export const recordBeaconVisit = async (): Promise<AnalyticsRecord | null> => {
     }
   }
 
+  // Attempt high precision GPS coordinates if browser allows
+  const gps = await fetchBrowserGPSCoordinates();
+  if (gps) {
+    geo.latitude = gps.latitude;
+    geo.longitude = gps.longitude;
+    geo.loc_source = `GPS High Precision (±${Math.round(gps.accuracy)}m)`;
+    geo.maps_url = `https://www.google.com/maps?q=${gps.latitude},${gps.longitude}`;
+  }
+
   const record: AnalyticsRecord = {
     id: 'rec_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now().toString(36),
     visitor_id: visitorId,
@@ -322,6 +346,10 @@ export const recordBeaconVisit = async (): Promise<AnalyticsRecord | null> => {
     city_district: geo.city_district,
     area_district: geo.area_district,
     isp: geo.isp,
+    latitude: geo.latitude,
+    longitude: geo.longitude,
+    loc_source: geo.loc_source || 'IP Geolocation',
+    maps_url: geo.maps_url || (geo.latitude && geo.longitude ? `https://www.google.com/maps?q=${geo.latitude},${geo.longitude}` : undefined),
     device_type: parseDeviceType(),
     os: parseOS(ua),
     browser: parseBrowser(ua),

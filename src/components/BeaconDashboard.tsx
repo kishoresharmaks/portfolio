@@ -27,7 +27,8 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
-  ChevronsRight
+  ChevronsRight,
+  ExternalLink
 } from 'lucide-react';
 import { 
   AnalyticsRecord, 
@@ -697,9 +698,20 @@ export const BeaconDashboard: React.FC<BeaconDashboardProps> = ({ onBackToPortfo
                       </span>
                     </td>
                     <td className="py-3 px-3 whitespace-nowrap">
-                      <span className="px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-800/50 text-indigo-200 font-bold text-[11px]">
+                      <span className="px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-800/50 text-indigo-200 font-bold text-[11px] inline-flex items-center gap-1">
                         📍 {r.city_district}
                       </span>
+                      {r.maps_url && (
+                        <a
+                          href={r.maps_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block text-[10px] text-amber-300 hover:text-amber-200 hover:underline mt-0.5 font-mono"
+                          title={`Lat: ${r.latitude}, Lng: ${r.longitude}`}
+                        >
+                          Map: {r.latitude}, {r.longitude} ↗
+                        </a>
+                      )}
                     </td>
                     <td className="py-3 px-3 text-slate-400 max-w-[160px] truncate" title={`${r.area_district} - ${r.isp}`}>
                       {r.area_district} <span className="text-[10px] text-slate-500">({r.isp})</span>
@@ -825,6 +837,33 @@ export const BeaconDashboard: React.FC<BeaconDashboardProps> = ({ onBackToPortfo
                 <p><span className="text-slate-500">City/District:</span> <strong className="text-emerald-300">{selectedRecord.city_district}</strong></p>
                 <p><span className="text-slate-500">Area/Postal:</span> {selectedRecord.area_district}</p>
                 <p><span className="text-slate-500">Network / ISP:</span> {selectedRecord.isp}</p>
+                
+                {(selectedRecord.latitude && selectedRecord.longitude) && (
+                  <div className="pt-2 pb-2 border-t border-b border-slate-800 my-2 space-y-1.5 bg-[#0B0F1D] p-2.5 rounded-lg border border-slate-800/80">
+                    <p>
+                      <span className="text-slate-400 font-semibold">Exact Coordinates:</span>{' '}
+                      <strong className="text-amber-300 font-mono">{selectedRecord.latitude}, {selectedRecord.longitude}</strong>
+                    </p>
+                    {selectedRecord.loc_source && (
+                      <p><span className="text-slate-400 font-semibold">Location Accuracy:</span> <span className="text-indigo-300 font-bold">{selectedRecord.loc_source}</span></p>
+                    )}
+                    {selectedRecord.maps_url && (
+                      <div className="pt-1">
+                        <a
+                          href={selectedRecord.maps_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-colors shadow-md shadow-indigo-600/30"
+                        >
+                          <MapPin className="w-3.5 h-3.5 text-amber-300" />
+                          <span>Open Google Maps</span>
+                          <ExternalLink className="w-3 h-3 ml-0.5" />
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <p><span className="text-slate-500">Device Type:</span> {selectedRecord.device_type}</p>
                 <p><span className="text-slate-500">OS & Browser:</span> {selectedRecord.os} ({selectedRecord.browser})</p>
                 <p><span className="text-slate-500">Screen Resolution:</span> {selectedRecord.screen_res}</p>
@@ -929,6 +968,10 @@ export const BeaconDashboard: React.FC<BeaconDashboardProps> = ({ onBackToPortfo
   city_district text,
   area_district text,
   isp text,
+  latitude text,
+  longitude text,
+  loc_source text,
+  maps_url text,
   device_type text,
   os text,
   browser text,
