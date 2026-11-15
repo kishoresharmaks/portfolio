@@ -227,3 +227,11 @@
   animation: sketch-wobble 0.4s ease-in-out infinite alternate;
 }
 
+/* Animated Flow Connectors */
+@keyframes dash {
+  to {
+    stroke-dashoffset: -14;
+  }
+}
+
+
