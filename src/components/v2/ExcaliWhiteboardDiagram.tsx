@@ -51,7 +51,7 @@ export const ExcaliWhiteboardDiagram: React.FC = () => {
             <span className="w-3.5 h-3.5 rounded-full bg-[#40c057] border border-[#1e1e1e] shadow-[1px_1px_0px_#1e1e1e] inline-block" />
           </div>
           <span className="text-xs font-hand font-bold text-slate-500 ml-2">
-            whiteboard_canvas_v2.excalidraw
+            system_architecture_blueprint.excalidraw
           </span>
         </div>
 

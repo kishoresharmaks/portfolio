@@ -26,15 +26,16 @@ export const ExcaliContact: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formState.name || !formState.message) return;
+    if (!formState.name.trim() || !formState.message.trim()) return;
 
-    // Form direct WhatsApp message URL
+    // Form professional direct inquiry message
+    const formattedSubject = formState.subject?.trim() || 'Software Engineering / Opportunity Inquiry';
     const text = encodeURIComponent(
-      `Hi Kishore! I saw your Excalidraw Portfolio V2.\n\nFrom: ${formState.name} (${formState.email})\nSubject: ${formState.subject || 'Portfolio Inquiry'}\n\nMessage:\n${formState.message}`
+      `Hello Kishore,\n\nI reviewed your software engineering portfolio and would like to get in touch regarding an opportunity / project.\n\nFrom: ${formState.name.trim()} (${formState.email.trim()})\nSubject: ${formattedSubject}\n\nMessage:\n${formState.message.trim()}`
     );
     const whatsappUrl = `https://wa.me/91${personal.phone}?text=${text}`;
     
-    // Also prepare mailto fallback
+    // Open WhatsApp
     window.open(whatsappUrl, '_blank');
     setStatus('sent');
   };
@@ -50,14 +51,14 @@ export const ExcaliContact: React.FC = () => {
         </div>
         
         <h2 className="text-3xl sm:text-4xl font-hand font-extrabold text-stone-900 tracking-tight">
-          Handcrafted Memo Pad &{' '}
+          Get In Touch &{' '}
           <span className="relative inline-block text-stone-900">
-            Contact Station
+            Let's Build Together
             <ScribbleUnderline color="#ffd43b" />
           </span>
         </h2>
         <p className="font-sans text-stone-600 mt-2 text-sm sm:text-base">
-          Direct lines to collaborate, hire for full-time SWE roles, or discuss web & AI projects.
+          Direct lines to discuss software engineering roles, backend architecture, or client projects.
         </p>
       </div>
 
@@ -69,13 +70,13 @@ export const ExcaliContact: React.FC = () => {
 
           <div className="flex items-center justify-between pb-4 mb-6 border-b-2 border-stone-800">
             <div>
-              <span className="font-mono text-xs text-stone-500 uppercase">Dispatch Memo</span>
+              <span className="font-mono text-xs text-stone-500 uppercase">Direct Channel</span>
               <h3 className="font-hand font-extrabold text-2xl text-stone-900">
-                Send a Direct Message
+                Send a Message
               </h3>
             </div>
             <span className="font-hand text-sm px-3 py-1 bg-[#fff9db] border border-stone-800 rounded-md shadow-sketch-sm">
-              Instant WhatsApp / Email
+              Instant Dispatch
             </span>
           </div>
 
@@ -83,20 +84,28 @@ export const ExcaliContact: React.FC = () => {
             <div className="py-12 text-center bg-[#ebfbee] border-2 border-stone-800 rounded-xl p-6">
               <CheckCircle2 size={44} className="mx-auto text-emerald-600 mb-3" />
               <h4 className="font-hand font-extrabold text-2xl text-stone-900">
-                Message Dispatched!
+                Message Ready for Dispatch!
               </h4>
               <p className="font-sans text-stone-700 text-sm mt-1 max-w-md mx-auto">
-                Opening WhatsApp to deliver your message directly to Kishore. You can also send a direct email at{' '}
-                <a href={`mailto:${personal.email}`} className="font-bold underline text-stone-900">
-                  {personal.email}
-                </a>.
+                Opening WhatsApp to deliver your inquiry directly to Kishore. You can also send an email with one click:
               </p>
-              <button
-                onClick={() => setStatus('idle')}
-                className="mt-6 px-4 py-1.5 bg-stone-900 text-amber-300 font-hand text-base font-bold rounded-lg border-2 border-stone-800 shadow-sketch"
-              >
-                Send Another Note
-              </button>
+              <div className="mt-6 flex flex-wrap justify-center gap-3">
+                <a
+                  href={`mailto:${personal.email}?subject=${encodeURIComponent(formState.subject || 'Software Engineering Inquiry')}&body=${encodeURIComponent(
+                    `Hello Kishore,\n\nI reviewed your portfolio and would like to connect regarding an opportunity.\n\nFrom: ${formState.name} (${formState.email})\n\nMessage:\n${formState.message}`
+                  )}`}
+                  className="px-4 py-2 bg-white text-stone-900 font-hand text-sm font-bold rounded-lg border-2 border-stone-800 shadow-sketch hover:bg-stone-50 flex items-center gap-2"
+                >
+                  <Mail size={15} />
+                  <span>Send as Direct Email</span>
+                </a>
+                <button
+                  onClick={() => setStatus('idle')}
+                  className="px-4 py-2 bg-stone-900 text-amber-300 font-hand text-sm font-bold rounded-lg border-2 border-stone-800 shadow-sketch"
+                >
+                  Send Another Message
+                </button>
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -276,12 +285,15 @@ export const ExcaliContact: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <a 
-            href="#hero" 
-            className="hover:text-stone-950 font-hand font-bold text-sm underline decoration-wavy"
+          <button 
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="hover:text-stone-950 font-hand font-bold text-sm underline decoration-wavy flex items-center gap-1 active:translate-y-0.5 cursor-pointer text-stone-700 hover:text-stone-950 transition-colors"
+            title="Scroll back to top of page"
           >
-            Back to Top ↑
-          </a>
+            <span>Back to Top</span>
+            <span>↑</span>
+          </button>
         </div>
       </div>
     </footer>
