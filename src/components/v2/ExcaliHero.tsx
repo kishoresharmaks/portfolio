@@ -136,17 +136,17 @@ export const ExcaliHero: React.FC<ExcaliHeroProps> = ({ onOpenContact, onExplore
           </div>
         </div>
 
-        {/* Right Column (7 cols): The Live Interactive Architecture Simulation */}
+        {/* Right Column (7 cols): How My Code Handles Real Traffic */}
         <div className="lg:col-span-7">
-          <div className="text-left mb-2 flex items-center justify-between">
+          <div className="text-left mb-2.5 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-              <span className="font-hand font-bold text-base text-stone-900">
-                Live Concurrency & Queue Simulator:
+              <span className="font-hand font-bold text-lg text-stone-900">
+                How An Order Works (Live Animation):
               </span>
             </div>
-            <span className="text-[11px] font-mono text-stone-500">
-              Watch packet flows in real time
+            <span className="text-xs font-hand text-stone-600 font-bold">
+              Watch the steps in real time ➔
             </span>
           </div>
 

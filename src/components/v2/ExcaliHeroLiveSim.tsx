@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { ScotchTape, PushPin, DoodleStar } from './ExcaliSvgDoodles';
-import { Server, Database, Layers, Play, CheckCircle2, Lock, MessageSquare, Zap, Cpu, RefreshCw } from 'lucide-react';
+import { ScotchTape, PushPin } from './ExcaliSvgDoodles';
+import { Server, Database, Layers, CheckCircle2, Lock, Zap, Smartphone } from 'lucide-react';
 
 export const ExcaliHeroLiveSim: React.FC = () => {
   const [step, setStep] = useState<number>(1);
   const [isManualTrigger, setIsManualTrigger] = useState<boolean>(false);
-  const [pulseCount, setPulseCount] = useState<number>(0);
+  const [pulseCount, setPulseCount] = useState<number>(1);
 
-  // Auto-cycle through the architecture simulation pipeline
+  // Auto-cycle through the order flow animation
   useEffect(() => {
     const timer = setInterval(() => {
       setStep((prev) => (prev >= 4 ? 1 : prev + 1));
@@ -20,6 +20,7 @@ export const ExcaliHeroLiveSim: React.FC = () => {
   const triggerManualSimulation = () => {
     setIsManualTrigger(true);
     setStep(1);
+    setPulseCount((c) => c + 1);
     setTimeout(() => setStep(2), 600);
     setTimeout(() => setStep(3), 1400);
     setTimeout(() => {
@@ -31,15 +32,15 @@ export const ExcaliHeroLiveSim: React.FC = () => {
   const getLogMessage = () => {
     switch (step) {
       case 1:
-        return { tag: 'CLIENT', text: 'POST /api/v1/orders/dispatch (Mobile / Web App)', color: 'text-amber-800 bg-amber-100' };
+        return { tag: 'ORDER SENT', text: 'Customer taps "Buy Now" on their phone', color: 'text-amber-800 bg-amber-100' };
       case 2:
-        return { tag: 'SPRING BOOT', text: 'REST Controller validated payload in 12ms • Thread Pool Active', color: 'text-blue-800 bg-blue-100' };
+        return { tag: 'FAST SERVER', text: 'Spring Boot checks payment & details in 0.01 seconds', color: 'text-blue-800 bg-blue-100' };
       case 3:
-        return { tag: 'POSTGRESQL', text: 'SELECT ... FOR UPDATE: ACID Row-Lock acquired on courier #48', color: 'text-emerald-800 bg-emerald-100' };
+        return { tag: 'DATABASE LOCKED', text: 'PostgreSQL locks the item so no two people buy the same thing', color: 'text-emerald-800 bg-emerald-100' };
       case 4:
-        return { tag: 'RABBITMQ', text: 'Published delivery.assigned event to background worker queue', color: 'text-purple-800 bg-purple-100' };
+        return { tag: 'DELIVERY READY', text: 'Nearest courier is auto-assigned & confirmation sent!', color: 'text-purple-800 bg-purple-100' };
       default:
-        return { tag: 'IDLE', text: 'System ready for high-concurrency requests', color: 'text-stone-800 bg-stone-100' };
+        return { tag: 'READY', text: 'System ready for next order', color: 'text-stone-800 bg-stone-100' };
     }
   };
 
@@ -59,49 +60,51 @@ export const ExcaliHeroLiveSim: React.FC = () => {
             <span className="w-2.5 h-2.5 rounded-full bg-amber-400 border border-stone-800 inline-block" />
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 border border-stone-800 inline-block" />
           </div>
-          <span className="font-mono text-[11px] text-stone-600 font-bold truncate">
-            live://system-concurrency-engine.excalidraw
+          <span className="font-mono text-xs text-stone-700 font-bold truncate">
+            demo://how-an-order-is-handled.excalidraw
           </span>
         </div>
 
         {/* Live Simulation Pulse Button */}
         <button
           onClick={triggerManualSimulation}
-          className="flex items-center gap-1.5 px-2.5 py-1 bg-stone-900 hover:bg-stone-800 text-amber-300 text-xs font-hand font-bold rounded-lg border border-stone-800 shadow-sketch-sm active:translate-x-[1px] active:translate-y-[1px] transition-all"
-          title="Click to trigger animated packet flow"
+          className="flex items-center gap-1.5 px-3 py-1 bg-stone-900 hover:bg-stone-800 text-amber-300 text-xs font-hand font-bold rounded-lg border border-stone-800 shadow-sketch-sm active:translate-x-[1px] active:translate-y-[1px] transition-all"
+          title="Click to test order flow"
         >
           <Zap size={13} className="text-amber-400 fill-amber-400" />
-          <span>Simulate Traffic</span>
+          <span>Tap to Test Order Flow!</span>
         </button>
       </div>
 
       {/* Interactive Visual Architecture Flow Diagram */}
-      <div className="relative py-2">
-        {/* Step 1: Client Layer */}
-        <div className="flex items-center justify-between gap-2 mb-2">
+      <div className="relative py-1">
+        {/* Step 1: Customer Order */}
+        <div className="flex items-center justify-between gap-2 mb-1.5">
           <div
             className={`w-full p-2.5 rounded-xl border-2 transition-all duration-300 ${
               step === 1
-                ? 'bg-[#fff3bf] border-stone-900 shadow-sketch scale-[1.02]'
+                ? 'bg-[#fff3bf] border-stone-900 shadow-sketch scale-[1.01]'
                 : 'bg-white border-stone-700 opacity-80'
             }`}
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-lg">📱</span>
+              <div className="flex items-center gap-2.5">
+                <div className="p-1.5 rounded-lg bg-amber-200 border border-stone-800 shadow-sketch-sm">
+                  <Smartphone size={16} className="text-stone-900" />
+                </div>
                 <div>
-                  <div className="font-hand font-bold text-sm text-stone-900 leading-none">
-                    1. Client Request
+                  <div className="font-hand font-bold text-base text-stone-900 leading-none">
+                    1. Customer Taps "Buy Now"
                   </div>
-                  <div className="text-[10px] font-mono text-stone-600 mt-0.5">
-                    Next.js Storefront / React Native App
+                  <div className="text-[11px] font-sans text-stone-600 mt-0.5">
+                    Order sent instantly from phone or browser
                   </div>
                 </div>
               </div>
               <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
-                step === 1 ? 'bg-amber-200 border-stone-800 text-stone-900 animate-pulse' : 'bg-stone-100 text-stone-500 border-stone-300'
+                step === 1 ? 'bg-amber-300 border-stone-800 text-stone-900 animate-pulse' : 'bg-stone-100 text-stone-500 border-stone-300'
               }`}>
-                POST /order
+                {step === 1 ? 'Sending...' : 'Order #1042'}
               </span>
             </div>
           </div>
@@ -123,35 +126,35 @@ export const ExcaliHeroLiveSim: React.FC = () => {
           </svg>
         </div>
 
-        {/* Step 2: Spring Boot / NestJS Backend API Engine */}
+        {/* Step 2: Spring Boot Backend */}
         <div
-          className={`w-full p-3 rounded-xl border-2 transition-all duration-300 mb-2 ${
+          className={`w-full p-2.5 rounded-xl border-2 transition-all duration-300 mb-1.5 ${
             step === 2
-              ? 'bg-[#d0ebff] border-stone-900 shadow-sketch scale-[1.02]'
+              ? 'bg-[#d0ebff] border-stone-900 shadow-sketch scale-[1.01]'
               : 'bg-white border-stone-700 opacity-80'
           }`}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="p-1.5 rounded-lg bg-white border border-stone-800 shadow-sketch-sm">
-                <Server size={18} className="text-stone-900" />
+              <div className="p-1.5 rounded-lg bg-blue-200 border border-stone-800 shadow-sketch-sm">
+                <Server size={16} className="text-stone-900" />
               </div>
               <div>
                 <div className="font-hand font-bold text-base text-stone-900 leading-none flex items-center gap-1.5">
-                  <span>2. Java Spring Boot & NestJS Engine</span>
+                  <span>2. Fast Server Checks (Java & Spring Boot)</span>
                   {step === 2 && (
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
                   )}
                 </div>
-                <div className="text-[11px] font-mono text-stone-700 mt-0.5">
-                  REST Controllers • Dispatch Logic • JWT Auth (18ms)
+                <div className="text-[11px] font-sans text-stone-700 mt-0.5">
+                  Confirms payment, user account & address in 0.01 seconds
                 </div>
               </div>
             </div>
             <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
-              step === 2 ? 'bg-blue-200 border-stone-800 text-blue-950 font-bold' : 'bg-stone-100 text-stone-500 border-stone-300'
+              step === 2 ? 'bg-blue-300 border-stone-800 text-blue-950 font-bold' : 'bg-stone-100 text-stone-500 border-stone-300'
             }`}>
-              {step === 2 ? '⚡ Processing' : '200 OK Ready'}
+              {step === 2 ? '⚡ Checking' : '✓ Verified'}
             </span>
           </div>
         </div>
@@ -182,13 +185,13 @@ export const ExcaliHeroLiveSim: React.FC = () => {
           </div>
         </div>
 
-        {/* Step 3: Split Dual Subsystems (PostgreSQL Row Lock + RabbitMQ Queues) */}
+        {/* Step 3: Split Dual Subsystems */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          {/* Subsystem A: PostgreSQL ACID Row Locking */}
+          {/* Subsystem A: Database Lock */}
           <div
             className={`p-2.5 rounded-xl border-2 transition-all duration-300 ${
               step === 3
-                ? 'bg-[#ebfbee] border-stone-900 shadow-sketch scale-[1.02]'
+                ? 'bg-[#ebfbee] border-stone-900 shadow-sketch scale-[1.01]'
                 : 'bg-white border-stone-700 opacity-80'
             }`}
           >
@@ -198,24 +201,24 @@ export const ExcaliHeroLiveSim: React.FC = () => {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="font-hand font-bold text-sm text-stone-900 flex items-center gap-1">
-                  <span>3A. PostgreSQL ACID</span>
-                  <Lock size={11} className={step === 3 ? 'text-emerald-700 animate-bounce' : 'text-stone-400'} />
+                  <span>3A. Smart Database Lock</span>
+                  <Lock size={12} className={step === 3 ? 'text-emerald-700 animate-bounce' : 'text-stone-400'} />
                 </div>
-                <div className="text-[10px] font-mono text-stone-700 leading-tight mt-0.5">
-                  Ordered Row Locks
+                <div className="text-[10px] font-sans text-stone-700 leading-tight mt-0.5">
+                  Locks the item in PostgreSQL
                 </div>
-                <div className="text-[9px] font-mono text-emerald-800 font-bold mt-1">
-                  ✓ 0 Duplicate Dispatches
+                <div className="text-[10px] font-mono text-emerald-800 font-bold mt-1">
+                  ✓ Prevents double-booking!
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Subsystem B: RabbitMQ Async Message Queue */}
+          {/* Subsystem B: Auto Notifications & Dispatch */}
           <div
             className={`p-2.5 rounded-xl border-2 transition-all duration-300 ${
               step === 4
-                ? 'bg-[#f3d9fa] border-stone-900 shadow-sketch scale-[1.02]'
+                ? 'bg-[#f3d9fa] border-stone-900 shadow-sketch scale-[1.01]'
                 : 'bg-white border-stone-700 opacity-80'
             }`}
           >
@@ -225,14 +228,14 @@ export const ExcaliHeroLiveSim: React.FC = () => {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="font-hand font-bold text-sm text-stone-900 flex items-center gap-1">
-                  <span>3B. RabbitMQ Queue</span>
-                  <Zap size={11} className={step === 4 ? 'text-purple-700 animate-pulse' : 'text-stone-400'} />
+                  <span>3B. Instant Dispatch Alerts</span>
+                  <Zap size={12} className={step === 4 ? 'text-purple-700 animate-pulse' : 'text-stone-400'} />
                 </div>
-                <div className="text-[10px] font-mono text-stone-700 leading-tight mt-0.5">
-                  Async Job Workers
+                <div className="text-[10px] font-sans text-stone-700 leading-tight mt-0.5">
+                  Sends job via RabbitMQ queue
                 </div>
-                <div className="text-[9px] font-mono text-purple-800 font-bold mt-1">
-                  ✓ Docker & Linux VPS
+                <div className="text-[10px] font-mono text-purple-800 font-bold mt-1">
+                  ✓ Courier assigned automatically!
                 </div>
               </div>
             </div>
@@ -240,20 +243,20 @@ export const ExcaliHeroLiveSim: React.FC = () => {
         </div>
       </div>
 
-      {/* Live Animated Console Ticker */}
-      <div className="mt-3 pt-2.5 border-t-2 border-stone-800 bg-[#f8f9fa] rounded-xl p-2 border border-stone-400">
+      {/* Live Friendly Status Ticker */}
+      <div className="mt-2.5 pt-2 border-t-2 border-stone-800 bg-[#f8f9fa] rounded-xl p-2 border border-stone-300">
         <div className="flex items-center justify-between text-[10px] font-mono mb-1">
-          <span className="flex items-center gap-1 text-stone-500 font-bold">
+          <span className="flex items-center gap-1 text-stone-600 font-bold">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            LIVE TELEMETRY STREAM
+            LIVE DEMO STATUS:
           </span>
-          <span className="text-stone-500">Pulse #{pulseCount}</span>
+          <span className="text-stone-500">Order #{pulseCount}</span>
         </div>
         <div className="flex items-center gap-2 text-xs font-mono truncate">
-          <span className={`px-1.5 py-0.2 rounded font-bold text-[10px] uppercase ${currentLog.color}`}>
+          <span className={`px-2 py-0.5 rounded font-bold text-[10px] uppercase ${currentLog.color}`}>
             {currentLog.tag}
           </span>
-          <span className="text-stone-800 font-medium truncate">
+          <span className="text-stone-900 font-semibold truncate font-sans text-xs">
             {currentLog.text}
           </span>
         </div>
