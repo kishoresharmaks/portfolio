@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /beacon
+
+Sitemap: https://portfolio.nexusnation.in/sitemap.xml

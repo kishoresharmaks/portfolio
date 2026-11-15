@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BeaconTracker } from './components/BeaconTracker';
 import { BeaconDashboard } from './components/BeaconDashboard';
-import { PortfolioV2 } from './components/v2/PortfolioV2';
+import { ModernPortfolio } from './components/modern/ModernPortfolio';
 
 export function App() {
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
@@ -44,11 +44,10 @@ export function App() {
     return <BeaconDashboard onBackToPortfolio={navigateToPortfolio} />;
   }
 
-  // The Handcrafted Excalidraw Whiteboard theme is now the primary, official portfolio
   return (
     <div className="w-full relative">
       <BeaconTracker />
-      <PortfolioV2 />
+      <ModernPortfolio />
     </div>
   );
 }
