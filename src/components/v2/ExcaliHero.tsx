@@ -9,7 +9,7 @@ import {
 } from './ExcaliSvgDoodles';
 import { RoughButton, RoughStickyNote } from './RoughElements';
 import { ExcaliWhiteboardDiagram } from './ExcaliWhiteboardDiagram';
-import { ExcaliHeroLiveSim } from './ExcaliHeroLiveSim';
+import { ExcaliSystemSimulator } from './ExcaliSystemSimulator';
 import { Download, Sparkles, Send, MapPin, Server, Database, Layers, ArrowDown } from 'lucide-react';
 
 interface ExcaliHeroProps {
@@ -136,22 +136,22 @@ export const ExcaliHero: React.FC<ExcaliHeroProps> = ({ onOpenContact, onExplore
           </div>
         </div>
 
-        {/* Right Column (7 cols): How My Code Handles Real Traffic */}
+        {/* Right Column (7 cols): Interactive Live Distributed Systems Sandbox */}
         <div className="lg:col-span-7">
           <div className="text-left mb-2.5 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
               <span className="font-hand font-bold text-lg text-stone-900">
-                How An Order Works (Live Animation):
+                Live System Architecture & Concurrency:
               </span>
             </div>
             <span className="text-xs font-hand text-stone-600 font-bold">
-              Watch the steps in real time ➔
+              Tap any test to run ➔
             </span>
           </div>
 
-          {/* Live Architecture Simulation Canvas */}
-          <ExcaliHeroLiveSim />
+          {/* Interactive Distributed Systems Sandbox */}
+          <ExcaliSystemSimulator />
         </div>
 
       </div>
