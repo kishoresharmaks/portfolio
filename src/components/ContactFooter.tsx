@@ -183,7 +183,7 @@ _Sent via Kishoresharma Portfolio Terminal_`;
               </div>
               <a
                 href={PORTFOLIO_DATA.personal.resumeUrl}
-                download="Kishoresharma_Web_Developer_Resume.pdf"
+                download="Kishoresharma_T_SDE_Resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center gap-2 transition-colors shadow-lg shadow-indigo-600/30 cursor-pointer"
@@ -394,11 +394,6 @@ _Sent via Kishoresharma Portfolio Terminal_`;
           </div>
           <div className="flex items-center gap-3 text-slate-500">
             <span>Built with React & Tailwind CSS</span>
-            <span>•</span>
-            <a href="#beacon" className="text-slate-400 hover:text-indigo-400 transition-colors flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>Beacon Console</span>
-            </a>
           </div>
         </div>
 

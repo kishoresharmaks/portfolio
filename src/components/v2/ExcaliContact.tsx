@@ -55,15 +55,15 @@ export const ExcaliContact: React.FC<ExcaliContactProps> = ({ onSwitchToV1 }) =>
           </RoughBadge>
         </div>
         
-        <h2 className="text-3xl sm:text-5xl font-hand font-extrabold text-stone-900 tracking-tight">
+        <h2 className="text-3xl sm:text-4xl font-hand font-extrabold text-stone-900 tracking-tight">
           Handcrafted Memo Pad &{' '}
           <span className="relative inline-block text-stone-900">
             Contact Station
             <ScribbleUnderline color="#ffd43b" />
           </span>
         </h2>
-        <p className="font-sans text-stone-600 mt-4 text-base sm:text-lg">
-          Whether you need a dedicated Full Stack Software Engineer, an e-commerce platform architect, or an AI query integration, my inbox is open!
+        <p className="font-sans text-stone-600 mt-2 text-sm sm:text-base">
+          Direct lines to collaborate, hire for full-time SWE roles, or discuss web & AI projects.
         </p>
       </div>
 
@@ -233,7 +233,7 @@ export const ExcaliContact: React.FC<ExcaliContactProps> = ({ onSwitchToV1 }) =>
             <div className="mt-5 pt-4 border-t-2 border-dashed border-stone-400 flex items-center justify-between">
               <a
                 href={personal.resumeUrl}
-                download
+                download="Kishoresharma_T_SDE_Resume.pdf"
                 className="inline-flex items-center gap-2 px-4 py-2 bg-stone-900 text-amber-300 font-hand text-base font-bold rounded-lg border-2 border-stone-800 shadow-sketch hover:bg-stone-800 transition-all active:translate-x-[1px] active:translate-y-[1px]"
               >
                 <Download size={16} />
@@ -296,15 +296,6 @@ export const ExcaliContact: React.FC<ExcaliContactProps> = ({ onSwitchToV1 }) =>
             className="hover:text-stone-950 font-hand font-bold text-sm underline decoration-wavy"
           >
             Back to Top ↑
-          </a>
-
-          <a 
-            href="#beacon" 
-            className="flex items-center gap-1 text-stone-400 hover:text-stone-700 transition-colors"
-            title="Beacon Analytics Admin"
-          >
-            <Activity size={12} />
-            <span className="text-[10px]">Beacon</span>
           </a>
         </div>
       </div>

@@ -32,15 +32,15 @@ export const ExcaliProjects: React.FC = () => {
           </RoughBadge>
         </div>
         
-        <h2 className="text-3xl sm:text-5xl font-hand font-extrabold text-stone-900 tracking-tight">
+        <h2 className="text-3xl sm:text-4xl font-hand font-extrabold text-stone-900 tracking-tight">
           Featured Engineering{' '}
           <span className="relative inline-block text-stone-900">
             Projects & Case Studies
             <ScribbleUnderline color="#ffd43b" />
           </span>
         </h2>
-        <p className="font-sans text-stone-600 mt-4 text-base sm:text-lg">
-          Wireframe browser schematics representing production platforms, real-time client systems, and generative AI interfaces.
+        <p className="font-sans text-stone-600 mt-2 text-sm sm:text-base">
+          Interactive wireframe cards of production platforms, booking systems, and generative AI interfaces.
         </p>
 
         {/* Category Filters */}
@@ -121,7 +121,7 @@ export const ExcaliProjects: React.FC = () => {
                   </p>
 
                   {/* Short Description */}
-                  <p className="font-sans text-xs sm:text-sm text-stone-700 mt-3 leading-relaxed">
+                  <p className="font-sans text-xs sm:text-sm text-stone-700 mt-2.5 leading-relaxed line-clamp-2">
                     {project.shortDescription}
                   </p>
 

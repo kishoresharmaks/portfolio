@@ -39,15 +39,33 @@ export const ExcaliFloatingToolbar: React.FC<ExcaliFloatingToolbarProps> = ({
     { id: 'text', name: 'Text', icon: Type, key: '7' },
   ];
 
+  const confettiQuotes = [
+    '🎨 Handcrafted Excalidraw Whiteboard!',
+    '🚀 6+ Production Platforms Shipped!',
+    '☕ Spring Boot & Next.js Stack!',
+    '⭐ 2x AWS Certified Engineer!',
+    '⚡ Zero Tech Debt & Clean Architecture!',
+  ];
+
   const handleToolClick = (toolId: string, toolName: string) => {
     setCurrentTool(toolId);
     if (onSelectTool) onSelectTool(toolId);
-    setBannerMessage(`✏️ Switched to ${toolName} Tool!`);
-    setTimeout(() => setBannerMessage(null), 2000);
+    const messages: Record<string, string> = {
+      select: '👆 Select & Click any Architecture Node',
+      rect: '🔲 Wireframe Card Mode',
+      diamond: '🔷 Decision Blueprint Mode',
+      ellipse: '⚪ Status Marker Active',
+      arrow: '↗ Flow Connector Tool',
+      freedraw: '✏️ Sketch Doodle Mode Active',
+      text: '📝 Handcrafted Notes Mode',
+    };
+    setBannerMessage(messages[toolId] || `Switched to ${toolName} Tool!`);
+    setTimeout(() => setBannerMessage(null), 2500);
   };
 
   const triggerConfetti = () => {
-    setBannerMessage('🎉 Handcrafted with Excalidraw UI Kit!');
+    const randomQuote = confettiQuotes[Math.floor(Math.random() * confettiQuotes.length)];
+    setBannerMessage(randomQuote);
     setTimeout(() => setBannerMessage(null), 3000);
   };
 
@@ -104,7 +122,7 @@ export const ExcaliFloatingToolbar: React.FC<ExcaliFloatingToolbarProps> = ({
         {/* Quick Resume Download */}
         <a
           href={PORTFOLIO_DATA.personal.resumeUrl}
-          download="Kishoresharma_Web_Developer_Resume.pdf"
+          download="Kishoresharma_T_SDE_Resume.pdf"
           target="_blank"
           rel="noopener noreferrer"
           title="Download Resume PDF"

@@ -17,15 +17,15 @@ export const ExcaliExperience: React.FC = () => {
           </RoughBadge>
         </div>
         
-        <h2 className="text-3xl sm:text-5xl font-hand font-extrabold text-stone-900 tracking-tight">
+        <h2 className="text-3xl sm:text-4xl font-hand font-extrabold text-stone-900 tracking-tight">
           Experience, Education &{' '}
           <span className="relative inline-block text-stone-900">
             Certifications
             <ScribbleUnderline color="#b197fc" />
           </span>
         </h2>
-        <p className="font-sans text-stone-600 mt-4 text-base sm:text-lg">
-          Practical software engineering internships, academic distinctions, AWS cloud credentials, and technical leadership.
+        <p className="font-sans text-stone-600 mt-2 text-sm sm:text-base">
+          Software engineering internship, academic distinction, and AWS cloud certifications.
         </p>
       </div>
 

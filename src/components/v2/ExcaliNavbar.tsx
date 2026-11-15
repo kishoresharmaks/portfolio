@@ -61,6 +61,12 @@ export const ExcaliNavbar: React.FC<ExcaliNavbarProps> = ({
           ))}
         </nav>
 
+        {/* Live Excalidraw Collaborator Avatar */}
+        <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 bg-[#ebfbee] border-2 border-[#1e1e1e] rounded-full shadow-[2px_2px_0px_#1e1e1e] text-[11px] font-hand font-bold text-emerald-900 select-none">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span>Live Canvas • Kishore</span>
+        </div>
+
         {/* Action CTAs */}
         <div className="hidden sm:flex items-center gap-2.5">
           {/* Switch to V1 Theme Button */}
@@ -78,7 +84,7 @@ export const ExcaliNavbar: React.FC<ExcaliNavbarProps> = ({
           {/* Resume Download */}
           <a
             href={PORTFOLIO_DATA.personal.resumeUrl}
-            download="Kishoresharma_Web_Developer_Resume.pdf"
+            download="Kishoresharma_T_SDE_Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="px-3 py-1.5 rounded-xl bg-[#fff9db] text-[#1e1e1e] text-xs font-hand font-bold border-2 border-[#1e1e1e] shadow-[2px_2px_0px_#1e1e1e] hover:bg-[#fff3bf] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all flex items-center gap-1.5"
@@ -130,7 +136,7 @@ export const ExcaliNavbar: React.FC<ExcaliNavbarProps> = ({
           <div className="pt-2 border-t border-slate-200 flex flex-col gap-2">
             <a
               href={PORTFOLIO_DATA.personal.resumeUrl}
-              download="Kishoresharma_Web_Developer_Resume.pdf"
+              download="Kishoresharma_T_SDE_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full py-2 bg-[#fff9db] border-2 border-[#1e1e1e] rounded-xl text-center font-hand font-bold text-sm shadow-[2px_2px_0px_#1e1e1e] flex items-center justify-center gap-2"

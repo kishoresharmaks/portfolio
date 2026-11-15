@@ -36,15 +36,15 @@ export const ExcaliSkills: React.FC = () => {
           </RoughBadge>
         </div>
         
-        <h2 className="text-3xl sm:text-5xl font-hand font-extrabold text-stone-900 tracking-tight">
+        <h2 className="text-3xl sm:text-4xl font-hand font-extrabold text-stone-900 tracking-tight">
           Handcrafted Skill Matrix &{' '}
           <span className="relative inline-block text-stone-900">
             Tech Stacks
             <ScribbleUnderline color="#a5d8ff" />
           </span>
         </h2>
-        <p className="font-sans text-stone-600 mt-4 text-base sm:text-lg">
-          Proficiency in building resilient enterprise systems, client shopping portals, and intelligent AI-augmented web tools.
+        <p className="font-sans text-stone-600 mt-2 text-sm sm:text-base">
+          Core technical competencies across enterprise backends, modern web frontends, and AI integrations.
         </p>
 
         {/* Filter Pills */}
@@ -115,10 +115,6 @@ export const ExcaliSkills: React.FC = () => {
                   </div>
                 </div>
               </div>
-
-              <p className="text-xs text-stone-600 font-sans mb-5 leading-relaxed">
-                {category.description}
-              </p>
 
               {/* Skill Items with Handcrafted Crosshatch Bars */}
               <div className="space-y-4">
