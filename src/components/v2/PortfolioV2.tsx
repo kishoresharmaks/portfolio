@@ -20,7 +20,7 @@ export const PortfolioV2: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#fdfbf7] text-stone-900 font-sans selection:bg-amber-200 selection:text-stone-900 excali-canvas-grid relative overflow-x-hidden pb-24">
+    <div className="min-h-screen w-full bg-[#fdfbf7] text-stone-900 font-sans selection:bg-amber-200 selection:text-stone-900 excali-canvas-grid relative overflow-x-hidden pb-36">
       {/* Fully Functional Interactive Whiteboard Drawing Canvas Layer */}
       <ExcaliInteractiveCanvas
         activeTool={activeCanvasTool}

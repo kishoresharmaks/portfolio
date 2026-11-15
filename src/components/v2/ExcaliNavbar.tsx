@@ -40,8 +40,8 @@ export const ExcaliNavbar: React.FC<ExcaliNavbarProps> = ({
                 Portfolio
               </span>
             </div>
-            <span className="text-xs font-hand text-slate-600 block -mt-1">
-              Full Stack & AI Engineer
+            <span className="text-xs font-hand text-slate-700 block -mt-1 font-semibold">
+              Backend & Full Stack Engineer
             </span>
           </div>
         </a>
