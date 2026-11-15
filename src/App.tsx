@@ -17,7 +17,7 @@ export function App() {
       return 'beacon';
     }
 
-    // Check if user explicitly asked for v1 or modern portfolio
+    // Check if user explicitly navigated to v1 or modern portfolio
     if (
       path === '/v1' ||
       path.startsWith('/v1/') ||
@@ -64,22 +64,18 @@ export function App() {
     }
   }, [currentRoute]);
 
-  const navigateTo = (target: PortfolioVersion) => {
-    let targetPath = '/';
-    if (target === 'v1') targetPath = '/v1';
-    else if (target === 'beacon') targetPath = '/beacon';
-
+  const navigateToExcalidraw = () => {
     if (window.history.pushState) {
-      window.history.pushState(null, '', targetPath);
+      window.history.pushState(null, '', '/');
     } else {
-      window.location.pathname = targetPath;
+      window.location.pathname = '/';
     }
-    setCurrentRoute(target);
+    setCurrentRoute('excalidraw');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (currentRoute === 'beacon') {
-    return <BeaconDashboard onBackToPortfolio={() => navigateTo('excalidraw')} />;
+    return <BeaconDashboard onBackToPortfolio={navigateToExcalidraw} />;
   }
 
   return (
@@ -88,36 +84,7 @@ export function App() {
       <BeaconTracker />
 
       {/* Main View: Default Excalidraw portfolio on /, Modern portfolio on /v1 */}
-      {currentRoute === 'v1' ? (
-        <ModernPortfolio onSwitchToV2={() => navigateTo('excalidraw')} />
-      ) : (
-        <PortfolioV2 onSwitchToV1={() => navigateTo('v1')} />
-      )}
-
-      {/* Floating Theme Switcher Quick Toggle (Desktop - Bottom Left) */}
-      <aside aria-label="Version Switcher" className="hidden sm:block fixed bottom-4 left-4 z-40 pointer-events-auto select-none">
-        {currentRoute === 'excalidraw' ? (
-          <button
-            onClick={() => navigateTo('v1')}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-stone-900/90 hover:bg-stone-950 text-white border-2 border-stone-800 text-xs font-mono font-bold shadow-sketch hover:scale-105 active:scale-95 transition-all backdrop-blur-sm group"
-            title="Switch to V1 Modern Developer Portfolio (/v1)"
-          >
-            <span className="w-2 h-2 rounded-full bg-indigo-400 group-hover:animate-ping" />
-            <span>Switch to Modern Portfolio (V1)</span>
-            <span className="text-indigo-400 text-[11px] font-sans">➔</span>
-          </button>
-        ) : (
-          <button
-            onClick={() => navigateTo('excalidraw')}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/90 hover:bg-white text-stone-900 border border-white/20 text-xs font-mono font-bold shadow-lg shadow-black/30 hover:scale-105 active:scale-95 transition-all backdrop-blur-sm group"
-            title="Switch to Excalidraw Whiteboard Portfolio (/)"
-          >
-            <span className="w-2 h-2 rounded-full bg-amber-400 group-hover:animate-ping" />
-            <span>Switch to Excalidraw (V2)</span>
-            <span className="text-amber-500 text-[11px] font-sans">➔</span>
-          </button>
-        )}
-      </aside>
+      {currentRoute === 'v1' ? <ModernPortfolio /> : <PortfolioV2 />}
     </div>
   );
 }
