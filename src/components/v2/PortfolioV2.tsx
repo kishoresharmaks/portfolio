@@ -8,7 +8,11 @@ import { ExcaliContact } from './ExcaliContact';
 import { ExcaliFloatingToolbar } from './ExcaliFloatingToolbar';
 import { ExcaliInteractiveCanvas, CanvasToolType } from './ExcaliInteractiveCanvas';
 
-export const PortfolioV2: React.FC = () => {
+interface PortfolioV2Props {
+  onSwitchToV1?: () => void;
+}
+
+export const PortfolioV2: React.FC<PortfolioV2Props> = ({ onSwitchToV1 }) => {
   const [activeCanvasTool, setActiveCanvasTool] = useState<CanvasToolType>('select');
   const [currentColor, setCurrentColor] = useState<string>('#1e1e1e');
 
@@ -32,6 +36,7 @@ export const PortfolioV2: React.FC = () => {
       {/* Navigation Bar */}
       <ExcaliNavbar
         onOpenContact={() => scrollToSection('contact')}
+        onSwitchToV1={onSwitchToV1}
       />
 
       {/* Main Content Sections */}

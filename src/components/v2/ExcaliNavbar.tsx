@@ -6,10 +6,12 @@ import { ScotchTape } from './ExcaliSvgDoodles';
 
 interface ExcaliNavbarProps {
   onOpenContact: () => void;
+  onSwitchToV1?: () => void;
 }
 
 export const ExcaliNavbar: React.FC<ExcaliNavbarProps> = ({
   onOpenContact,
+  onSwitchToV1,
 }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -66,7 +68,19 @@ export const ExcaliNavbar: React.FC<ExcaliNavbarProps> = ({
         </div>
 
         {/* Action CTAs */}
-        <div className="hidden sm:flex items-center gap-2.5">
+        <div className="hidden sm:flex items-center gap-2">
+          {/* Switch to V1 Modern Theme */}
+          {onSwitchToV1 && (
+            <button
+              onClick={onSwitchToV1}
+              className="px-2.5 py-1.5 rounded-xl bg-stone-900 text-amber-300 border-2 border-[#1e1e1e] text-xs font-mono font-bold shadow-[2px_2px_0px_#1e1e1e] hover:bg-stone-800 hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all flex items-center gap-1.5"
+              title="Switch to V1 Modern Developer Portfolio (/v1)"
+            >
+              <span>⚡</span>
+              <span>Modern (V1)</span>
+            </button>
+          )}
+
           {/* Resume Download */}
           <a
             href={PORTFOLIO_DATA.personal.resumeUrl}
@@ -120,6 +134,18 @@ export const ExcaliNavbar: React.FC<ExcaliNavbarProps> = ({
           </div>
 
           <div className="pt-2 border-t border-slate-200 flex flex-col gap-2">
+            {onSwitchToV1 && (
+              <button
+                onClick={() => {
+                  setMobileOpen(false);
+                  onSwitchToV1();
+                }}
+                className="w-full py-2 bg-stone-900 text-amber-300 border-2 border-[#1e1e1e] rounded-xl font-hand font-bold text-sm shadow-[2px_2px_0px_#1e1e1e] flex items-center justify-center gap-2"
+              >
+                <span>⚡ Switch to Modern Portfolio (V1)</span>
+              </button>
+            )}
+
             <a
               href={PORTFOLIO_DATA.personal.resumeUrl}
               download="Kishoresharma_T_SDE_Resume.pdf"

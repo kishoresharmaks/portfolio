@@ -4,9 +4,10 @@ import { PORTFOLIO_DATA } from '../../data/portfolioData';
 
 interface ModernNavbarProps {
   onOpenContact?: () => void;
+  onSwitchToV2?: () => void;
 }
 
-export const ModernNavbar: React.FC<ModernNavbarProps> = ({ onOpenContact }) => {
+export const ModernNavbar: React.FC<ModernNavbarProps> = ({ onOpenContact, onSwitchToV2 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [scrolled, setScrolled] = useState(false);
@@ -114,7 +115,19 @@ export const ModernNavbar: React.FC<ModernNavbarProps> = ({ onOpenContact }) => 
         </nav>
 
         {/* Right CTA Actions */}
-        <div className="hidden sm:flex items-center gap-3">
+        <div className="hidden sm:flex items-center gap-2.5">
+          {/* Switch to Excalidraw V2 Theme */}
+          {onSwitchToV2 && (
+            <button
+              onClick={onSwitchToV2}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium text-amber-300 bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 transition-all shadow-sm"
+              title="Switch to Handcrafted Excalidraw Whiteboard (Root /)"
+            >
+              <span>✏️</span>
+              <span>Excalidraw (V2)</span>
+            </button>
+          )}
+
           <a
             href={PORTFOLIO_DATA.personal.resumeUrl}
             download="Kishoresharma_T_SDE_Resume.pdf"
@@ -173,25 +186,39 @@ export const ModernNavbar: React.FC<ModernNavbarProps> = ({ onOpenContact }) => 
             ))}
           </div>
 
-          <div className="pt-3 border-t border-white/[0.08] flex gap-2">
-            <a
-              href={PORTFOLIO_DATA.personal.resumeUrl}
-              download="Kishoresharma_T_SDE_Resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 py-2 rounded-lg text-center text-xs font-medium bg-white/[0.06] text-white border border-white/10 flex items-center justify-center gap-1.5"
-            >
-              <Download size={13} />
-              <span>Resume PDF</span>
-            </a>
-            <a
-              href="#contact"
-              onClick={(e) => handleLinkClick(e, '#contact')}
-              className="flex-1 py-2 rounded-lg text-center text-xs font-semibold bg-indigo-600 text-white flex items-center justify-center gap-1.5"
-            >
-              <span>Contact</span>
-              <ArrowUpRight size={13} />
-            </a>
+          <div className="pt-3 border-t border-white/[0.08] flex flex-col gap-2">
+            {onSwitchToV2 && (
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onSwitchToV2();
+                }}
+                className="w-full py-2 rounded-lg text-center text-xs font-mono font-semibold bg-amber-400/10 text-amber-300 border border-amber-400/30 flex items-center justify-center gap-1.5"
+              >
+                <span>✏️ Switch to Excalidraw Whiteboard (V2)</span>
+              </button>
+            )}
+
+            <div className="flex gap-2">
+              <a
+                href={PORTFOLIO_DATA.personal.resumeUrl}
+                download="Kishoresharma_T_SDE_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 py-2 rounded-lg text-center text-xs font-medium bg-white/[0.06] text-white border border-white/10 flex items-center justify-center gap-1.5"
+              >
+                <Download size={13} />
+                <span>Resume PDF</span>
+              </a>
+              <a
+                href="#contact"
+                onClick={(e) => handleLinkClick(e, '#contact')}
+                className="flex-1 py-2 rounded-lg text-center text-xs font-semibold bg-indigo-600 text-white flex items-center justify-center gap-1.5"
+              >
+                <span>Contact</span>
+                <ArrowUpRight size={13} />
+              </a>
+            </div>
           </div>
         </div>
       )}

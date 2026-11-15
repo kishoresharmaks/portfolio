@@ -11,11 +11,15 @@ import { ModernResumeCTA } from './ModernResumeCTA';
 import { ModernContact } from './ModernContact';
 import { ModernFooter } from './ModernFooter';
 
-export const ModernPortfolio: React.FC = () => {
+interface ModernPortfolioProps {
+  onSwitchToV2?: () => void;
+}
+
+export const ModernPortfolio: React.FC<ModernPortfolioProps> = ({ onSwitchToV2 }) => {
   return (
     <div className="min-h-screen bg-[#090D16] text-slate-100 font-sans antialiased selection:bg-indigo-500/30 selection:text-white relative overflow-x-hidden">
       {/* Navigation Header */}
-      <ModernNavbar />
+      <ModernNavbar onSwitchToV2={onSwitchToV2} />
 
       {/* Main Content Landmark */}
       <main id="main-content" className="relative z-10 w-full">
