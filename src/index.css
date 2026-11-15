@@ -126,3 +126,104 @@
   transform: translateZ(0);
   will-change: transform;
 }
+
+/* =========================================================
+   V2 EXCALIDRAW HANDCRAFTED WHITEBOARD THEME
+   Inspired by libraries.excalidraw.com
+   ========================================================= */
+
+/* Excalidraw Dot Canvas Grid */
+.excali-canvas-grid {
+  background-color: #fbfbfa;
+  background-image: radial-gradient(#d3d6dc 1.3px, transparent 1.3px);
+  background-size: 24px 24px;
+}
+
+/* Handcrafted Sketch Border */
+.sketch-border {
+  border: 2px solid #1e1e1e;
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+}
+
+.sketch-border-subtle {
+  border: 2px solid #1e1e1e;
+  border-radius: 14px;
+}
+
+.sketch-border-sm {
+  border: 1.5px solid #1e1e1e;
+  border-radius: 8px;
+}
+
+/* Handcrafted 3D Tactile Buttons */
+.sketch-btn {
+  border: 2px solid #1e1e1e;
+  box-shadow: 3px 3px 0px #1e1e1e;
+  transition: all 0.15s ease-in-out;
+}
+.sketch-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #1e1e1e;
+}
+.sketch-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #1e1e1e;
+}
+
+/* Sticky Note Scotch Tape */
+.sketch-tape {
+  background: rgba(254, 240, 138, 0.75);
+  backdrop-filter: blur(2px);
+  border-left: 2px dashed rgba(217, 119, 6, 0.4);
+  border-right: 2px dashed rgba(217, 119, 6, 0.4);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.sketch-tape-blue {
+  background: rgba(186, 230, 253, 0.75);
+  border-left: 2px dashed rgba(2, 132, 199, 0.4);
+  border-right: 2px dashed rgba(2, 132, 199, 0.4);
+}
+
+.sketch-tape-pink {
+  background: rgba(254, 205, 211, 0.75);
+  border-left: 2px dashed rgba(225, 29, 72, 0.4);
+  border-right: 2px dashed rgba(225, 29, 72, 0.4);
+}
+
+/* Handcrafted Highlighters */
+.marker-yellow {
+  background: linear-gradient(104deg, rgba(254, 240, 138, 0) 0.9%, rgba(254, 240, 138, 0.85) 2.4%, rgba(254, 240, 138, 0.6) 98%);
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
+.marker-cyan {
+  background: linear-gradient(104deg, rgba(186, 230, 253, 0) 0.9%, rgba(186, 230, 253, 0.85) 2.4%, rgba(186, 230, 253, 0.6) 98%);
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
+.marker-green {
+  background: linear-gradient(104deg, rgba(187, 247, 208, 0) 0.9%, rgba(187, 247, 208, 0.85) 2.4%, rgba(187, 247, 208, 0.6) 98%);
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
+.marker-purple {
+  background: linear-gradient(104deg, rgba(233, 213, 255, 0) 0.9%, rgba(233, 213, 255, 0.85) 2.4%, rgba(233, 213, 255, 0.6) 98%);
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
+/* Wobbly Hand-Drawn SVG Animation */
+@keyframes sketch-wobble {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-0.5deg); }
+  75% { transform: rotate(0.5deg); }
+}
+
+.hover-sketch-wobble:hover {
+  animation: sketch-wobble 0.4s ease-in-out infinite alternate;
+}
+
