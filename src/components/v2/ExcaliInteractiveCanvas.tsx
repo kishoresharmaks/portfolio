@@ -64,6 +64,21 @@ export const ExcaliInteractiveCanvas: React.FC<ExcaliInteractiveCanvasProps> = (
     }
   }, [elements, currentElement]);
 
+  // Listen for global custom events from floating toolbar (Mobile/Desktop)
+  useEffect(() => {
+    const handleUndo = () => setElements((prev) => prev.slice(0, -1));
+    const handleClear = () => {
+      setElements([]);
+      setCurrentElement(null);
+    };
+    window.addEventListener('excali-undo', handleUndo);
+    window.addEventListener('excali-clear', handleClear);
+    return () => {
+      window.removeEventListener('excali-undo', handleUndo);
+      window.removeEventListener('excali-clear', handleClear);
+    };
+  }, []);
+
   const drawRoughElement = (rc: any, svg: SVGSVGElement, el: DrawnElement) => {
     try {
       if (el.type === 'pencil' && el.points && el.points.length > 1) {
@@ -290,7 +305,10 @@ export const ExcaliInteractiveCanvas: React.FC<ExcaliInteractiveCanvasProps> = (
           ? 'pointer-events-none'
           : 'pointer-events-auto cursor-crosshair z-30'
       }`}
-      style={{ height: '100%' }}
+      style={{ 
+        height: '100%',
+        touchAction: activeTool !== 'select' ? 'none' : 'auto'
+      }}
     >
       {/* SVG Canvas where all strokes and shapes are rendered */}
       <svg
@@ -299,81 +317,89 @@ export const ExcaliInteractiveCanvas: React.FC<ExcaliInteractiveCanvasProps> = (
         style={{ minHeight: '100%' }}
       />
 
-      {/* Floating Active Drawing Status Pill */}
+      {/* Floating Active Drawing Status Pill (Desktop) */}
       {activeTool !== 'select' && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-auto flex items-center gap-2 px-4 py-2 bg-white border-2 border-stone-800 rounded-2xl shadow-sketch animate-in fade-in slide-in-from-top-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-          <span className="font-hand font-bold text-sm text-stone-900">
-            {activeTool === 'pencil' && '✏️ Draw anywhere on the screen!'}
-            {activeTool === 'rectangle' && '🔲 Drag to draw a rectangle'}
-            {activeTool === 'diamond' && '◇ Drag to draw a diamond'}
-            {activeTool === 'circle' && '○ Drag to draw a circle'}
-            {activeTool === 'arrow' && '↗ Drag to draw an arrow'}
-            {activeTool === 'text' && '📝 Click anywhere to write text'}
-            {activeTool === 'eraser' && '🧹 Click on any doodle to erase'}
-          </span>
+        <>
+          <div className="hidden md:flex fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-auto items-center gap-2 px-4 py-2 bg-white border-2 border-stone-800 rounded-2xl shadow-sketch animate-in fade-in slide-in-from-top-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+            <span className="font-hand font-bold text-sm text-stone-900">
+              {activeTool === 'pencil' && '✏️ Draw anywhere on the screen!'}
+              {activeTool === 'rectangle' && '🔲 Drag to draw a rectangle'}
+              {activeTool === 'diamond' && '◇ Drag to draw a diamond'}
+              {activeTool === 'circle' && '○ Drag to draw a circle'}
+              {activeTool === 'arrow' && '↗ Drag to draw an arrow'}
+              {activeTool === 'text' && '📝 Click anywhere to write text'}
+              {activeTool === 'eraser' && '🧹 Click on any doodle to erase'}
+            </span>
 
-          <div className="h-4 w-[1px] bg-stone-300 mx-1" />
+            <div className="h-4 w-[1px] bg-stone-300 mx-1" />
 
-          {/* Color picker pills */}
-          <div className="flex items-center gap-1.5">
-            {[
-              { id: '#1e1e1e', title: 'Black' },
-              { id: '#1971c2', title: 'Blue' },
-              { id: '#e03131', title: 'Red' },
-              { id: '#2f9e44', title: 'Green' },
-              { id: '#f59f00', title: 'Amber' },
-            ].map((c) => (
-              <button
-                key={c.id}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onColorChange(c.id);
-                }}
-                title={c.title}
-                className={`w-5 h-5 rounded-full border-2 border-stone-800 transition-transform ${
-                  currentColor === c.id ? 'scale-125 ring-2 ring-stone-900 ring-offset-1' : 'hover:scale-110'
-                }`}
-                style={{ backgroundColor: c.id }}
-              />
-            ))}
+            {/* Color picker pills */}
+            <div className="flex items-center gap-1.5">
+              {[
+                { id: '#1e1e1e', title: 'Black' },
+                { id: '#1971c2', title: 'Blue' },
+                { id: '#e03131', title: 'Red' },
+                { id: '#2f9e44', title: 'Green' },
+                { id: '#f59f00', title: 'Amber' },
+              ].map((c) => (
+                <button
+                  key={c.id}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onColorChange(c.id);
+                  }}
+                  title={c.title}
+                  className={`w-5 h-5 rounded-full border-2 border-stone-800 transition-transform ${
+                    currentColor === c.id ? 'scale-125 ring-2 ring-stone-900 ring-offset-1' : 'hover:scale-110'
+                  }`}
+                  style={{ backgroundColor: c.id }}
+                />
+              ))}
+            </div>
+
+            <div className="h-4 w-[1px] bg-stone-300 mx-1" />
+
+            {/* Undo & Clear */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                undoLast();
+              }}
+              disabled={elements.length === 0}
+              className="px-2 py-0.5 text-xs font-hand font-bold bg-stone-100 hover:bg-stone-200 border border-stone-800 rounded disabled:opacity-40"
+            >
+              Undo
+            </button>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                clearAll();
+              }}
+              disabled={elements.length === 0}
+              className="px-2 py-0.5 text-xs font-hand font-bold bg-rose-50 hover:bg-rose-100 text-rose-800 border border-stone-800 rounded disabled:opacity-40"
+            >
+              Clear
+            </button>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onToolChange('select');
+              }}
+              className="px-2.5 py-0.5 text-xs font-hand font-bold bg-stone-900 text-white rounded hover:bg-stone-800"
+            >
+              Done (Esc)
+            </button>
           </div>
 
-          <div className="h-4 w-[1px] bg-stone-300 mx-1" />
-
-          {/* Undo & Clear */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              undoLast();
-            }}
-            disabled={elements.length === 0}
-            className="px-2 py-0.5 text-xs font-hand font-bold bg-stone-100 hover:bg-stone-200 border border-stone-800 rounded disabled:opacity-40"
-          >
-            Undo
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              clearAll();
-            }}
-            disabled={elements.length === 0}
-            className="px-2 py-0.5 text-xs font-hand font-bold bg-rose-50 hover:bg-rose-100 text-rose-800 border border-stone-800 rounded disabled:opacity-40"
-          >
-            Clear
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToolChange('select');
-            }}
-            className="px-2.5 py-0.5 text-xs font-hand font-bold bg-stone-900 text-white rounded hover:bg-stone-800"
-          >
-            Done (Esc)
-          </button>
-        </div>
+          {/* Floating Subtle Indicator (Mobile) */}
+          <div className="md:hidden fixed top-16 left-1/2 -translate-x-1/2 z-30 pointer-events-none px-3 py-1 bg-stone-900/90 text-amber-300 text-xs font-hand font-bold rounded-full shadow-sketch flex items-center gap-1.5 backdrop-blur-sm">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Draw with finger on screen</span>
+          </div>
+        </>
       )}
 
       {/* Text insertion popup */}

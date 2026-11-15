@@ -53,9 +53,9 @@ export const ExcaliHeroLiveSim: React.FC = () => {
       <PushPin className="-top-3.5 right-8" />
 
       {/* Blueprint Header Bar */}
-      <div className="flex items-center justify-between pb-3 mb-3 border-b-2 border-dashed border-stone-300">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5">
+      <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 pb-3 mb-3 border-b-2 border-dashed border-stone-300">
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center gap-1.5 shrink-0">
             <span className="w-2.5 h-2.5 rounded-full bg-rose-400 border border-stone-800 inline-block" />
             <span className="w-2.5 h-2.5 rounded-full bg-amber-400 border border-stone-800 inline-block" />
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 border border-stone-800 inline-block" />
@@ -68,7 +68,7 @@ export const ExcaliHeroLiveSim: React.FC = () => {
         {/* Live Simulation Pulse Button */}
         <button
           onClick={triggerManualSimulation}
-          className="flex items-center gap-1.5 px-3 py-1 bg-stone-900 hover:bg-stone-800 text-amber-300 text-xs font-hand font-bold rounded-lg border border-stone-800 shadow-sketch-sm active:translate-x-[1px] active:translate-y-[1px] transition-all"
+          className="flex items-center gap-1.5 px-3 py-1 bg-stone-900 hover:bg-stone-800 text-amber-300 text-xs font-hand font-bold rounded-lg border border-stone-800 shadow-sketch-sm active:translate-x-[1px] active:translate-y-[1px] transition-all shrink-0"
           title="Click to test order flow"
         >
           <Zap size={13} className="text-amber-400 fill-amber-400" />

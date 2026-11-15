@@ -59,6 +59,7 @@ export const PortfolioV2: React.FC = () => {
         onSelectTool={(tool) => setActiveCanvasTool(tool)}
         currentColor={currentColor}
         onColorChange={(color) => setCurrentColor(color)}
+        onOpenContact={() => scrollToSection('contact')}
       />
     </div>
   );
