@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import { Menu, X, Send, Download, Sparkles, Terminal, Code2 } from 'lucide-react';
+import { Menu, X, Send, Download, Sparkles, Code2 } from 'lucide-react';
 import { PORTFOLIO_DATA } from '../../data/portfolioData';
 import { RoughButton, RoughBadge } from './RoughElements';
 import { ScotchTape } from './ExcaliSvgDoodles';
 
 interface ExcaliNavbarProps {
   onOpenContact: () => void;
-  onSwitchTheme?: () => void;
 }
 
 export const ExcaliNavbar: React.FC<ExcaliNavbarProps> = ({
   onOpenContact,
-  onSwitchTheme,
 }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -38,8 +36,8 @@ export const ExcaliNavbar: React.FC<ExcaliNavbarProps> = ({
               <span className="font-hand font-bold text-lg sm:text-xl text-[#1e1e1e] tracking-tight">
                 {PORTFOLIO_DATA.personal.name}
               </span>
-              <span className="px-1.5 py-0.2 text-[10px] font-hand font-bold bg-[#d3f9d8] border border-[#1e1e1e] rounded shadow-[1px_1px_0px_#1e1e1e]">
-                V2 Whiteboard
+              <span className="px-2 py-0.5 text-[11px] font-hand font-bold bg-[#d3f9d8] border border-[#1e1e1e] rounded shadow-[1px_1px_0px_#1e1e1e]">
+                Portfolio
               </span>
             </div>
             <span className="text-xs font-hand text-slate-600 block -mt-1">
@@ -69,18 +67,6 @@ export const ExcaliNavbar: React.FC<ExcaliNavbarProps> = ({
 
         {/* Action CTAs */}
         <div className="hidden sm:flex items-center gap-2.5">
-          {/* Switch to V1 Theme Button */}
-          {onSwitchTheme && (
-            <button
-              onClick={onSwitchTheme}
-              className="px-3 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-hand font-bold border-2 border-[#1e1e1e] shadow-[2px_2px_0px_#1e1e1e] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all flex items-center gap-1.5"
-              title="Switch to V1 Cyber Terminal Theme"
-            >
-              <Terminal className="w-3.5 h-3.5 text-cyan-400" />
-              <span>V1 Cyber</span>
-            </button>
-          )}
-
           {/* Resume Download */}
           <a
             href={PORTFOLIO_DATA.personal.resumeUrl}
@@ -143,18 +129,6 @@ export const ExcaliNavbar: React.FC<ExcaliNavbarProps> = ({
             >
               <Download className="w-4 h-4" /> Download Resume PDF
             </a>
-
-            {onSwitchTheme && (
-              <button
-                onClick={() => {
-                  setMobileOpen(false);
-                  onSwitchTheme();
-                }}
-                className="w-full py-2 bg-slate-900 text-white border-2 border-[#1e1e1e] rounded-xl font-hand font-bold text-sm shadow-[2px_2px_0px_#1e1e1e] flex items-center justify-center gap-2"
-              >
-                <Terminal className="w-4 h-4 text-cyan-400" /> Switch to V1 Cyber Theme
-              </button>
-            )}
 
             <button
               onClick={() => {

@@ -7,11 +7,7 @@ import { ExcaliExperience } from './ExcaliExperience';
 import { ExcaliContact } from './ExcaliContact';
 import { ExcaliFloatingToolbar } from './ExcaliFloatingToolbar';
 
-interface PortfolioV2Props {
-  onSwitchTheme: () => void;
-}
-
-export const PortfolioV2: React.FC<PortfolioV2Props> = ({ onSwitchTheme }) => {
+export const PortfolioV2: React.FC = () => {
   const [activeCanvasTool, setActiveCanvasTool] = useState<string>('select');
 
   const scrollToSection = (id: string) => {
@@ -26,7 +22,6 @@ export const PortfolioV2: React.FC<PortfolioV2Props> = ({ onSwitchTheme }) => {
       {/* Handcrafted Excalidraw Navigation Bar */}
       <ExcaliNavbar
         onOpenContact={() => scrollToSection('contact')}
-        onSwitchTheme={onSwitchTheme}
       />
 
       {/* Main Content Sections */}
@@ -48,13 +43,12 @@ export const PortfolioV2: React.FC<PortfolioV2Props> = ({ onSwitchTheme }) => {
       </main>
 
       {/* Contact & Footer Section */}
-      <ExcaliContact onSwitchToV1={onSwitchTheme} />
+      <ExcaliContact />
 
       {/* Excalidraw Floating Tool Dock */}
       <ExcaliFloatingToolbar
         activeTool={activeCanvasTool}
         onSelectTool={(tool) => setActiveCanvasTool(tool)}
-        onSwitchTheme={onSwitchTheme}
       />
     </div>
   );

@@ -10,19 +10,16 @@ import {
   Type, 
   Sparkles,
   Download,
-  Terminal,
   Eraser
 } from 'lucide-react';
 import { PORTFOLIO_DATA } from '../../data/portfolioData';
 
 interface ExcaliFloatingToolbarProps {
-  onSwitchTheme?: () => void;
   activeTool?: string;
   onSelectTool?: (tool: string) => void;
 }
 
 export const ExcaliFloatingToolbar: React.FC<ExcaliFloatingToolbarProps> = ({
-  onSwitchTheme,
   activeTool = 'select',
   onSelectTool,
 }) => {
@@ -131,19 +128,6 @@ export const ExcaliFloatingToolbar: React.FC<ExcaliFloatingToolbarProps> = ({
           <Download className="w-3.5 h-3.5" />
           <span className="hidden sm:inline">Resume PDF</span>
         </a>
-
-        {/* Theme Toggle to V1 Cyber Terminal */}
-        {onSwitchTheme && (
-          <button
-            onClick={onSwitchTheme}
-            title="Switch back to V1 Cyber Mode"
-            className="px-2.5 py-1.5 rounded-xl bg-[#1e1e1e] text-white hover:bg-black text-xs font-hand font-bold flex items-center gap-1.5 shadow-[2px_2px_0px_#6366f1] shrink-0 ml-1"
-          >
-            <Terminal className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="hidden sm:inline">Switch to V1 Cyber</span>
-            <span className="sm:hidden">V1</span>
-          </button>
-        )}
 
       </div>
     </div>

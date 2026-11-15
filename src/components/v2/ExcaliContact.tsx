@@ -11,16 +11,10 @@ import {
   Download, 
   CheckCircle2, 
   Github, 
-  Linkedin, 
-  Terminal,
-  Activity
+  Linkedin
 } from 'lucide-react';
 
-interface ExcaliContactProps {
-  onSwitchToV1: () => void;
-}
-
-export const ExcaliContact: React.FC<ExcaliContactProps> = ({ onSwitchToV1 }) => {
+export const ExcaliContact: React.FC = () => {
   const { personal } = PORTFOLIO_DATA;
   const [formState, setFormState] = useState({
     name: '',
@@ -269,15 +263,6 @@ export const ExcaliContact: React.FC<ExcaliContactProps> = ({ onSwitchToV1 }) =>
                 <Linkedin size={15} />
                 <span>LinkedIn</span>
               </a>
-
-              <button
-                onClick={onSwitchToV1}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-900 hover:bg-stone-800 text-emerald-400 border-2 border-stone-800 rounded-lg text-xs font-mono font-bold shadow-sketch-sm transition-all ml-auto"
-                title="Switch to V1 Cyber Terminal Theme"
-              >
-                <Terminal size={14} />
-                <span>Switch to V1 Cyber Mode</span>
-              </button>
             </div>
           </div>
         </div>
@@ -287,7 +272,7 @@ export const ExcaliContact: React.FC<ExcaliContactProps> = ({ onSwitchToV1 }) =>
       <div className="pt-8 border-t-2 border-stone-300 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-stone-600">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
-          <span>© 2026 Kishoresharma T • Excalidraw V2 Handcrafted Edition</span>
+          <span>© 2026 Kishoresharma T • Handcrafted Engineering Portfolio</span>
         </div>
 
         <div className="flex items-center gap-4">

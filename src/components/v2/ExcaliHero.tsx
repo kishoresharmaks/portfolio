@@ -61,7 +61,7 @@ export const ExcaliHero: React.FC<ExcaliHeroProps> = ({ onOpenContact, onExplore
             <ScotchTape className="-top-3 right-4 w-12 h-4 opacity-90" />
             <div className="flex items-center gap-1 text-purple-900 font-bold">
               <DoodleStar size={14} color="#7950f2" />
-              <span>V2 Whiteboard</span>
+              <span>Whiteboard</span>
             </div>
             <p className="text-stone-700 text-[11px] mt-1 leading-tight font-hand">
               Handcrafted UI schematics
