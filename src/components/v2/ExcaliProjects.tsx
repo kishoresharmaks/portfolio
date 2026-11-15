@@ -3,7 +3,7 @@ import { PORTFOLIO_DATA, Project } from '../../data/portfolioData';
 import { ScotchTape, PushPin, DoodleStar, ScribbleUnderline, SketchStamp } from './ExcaliSvgDoodles';
 import { RoughBadge, RoughButton } from './RoughElements';
 import { ExcaliProjectModal } from './ExcaliProjectModal';
-import { ExternalLink, Eye, ArrowUpRight, Globe, Sparkles } from 'lucide-react';
+import { ExternalLink, Eye, ArrowUpRight, Globe, Github } from 'lucide-react';
 
 export const ExcaliProjects: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -17,18 +17,19 @@ export const ExcaliProjects: React.FC = () => {
 
   const categories = [
     { id: 'all', label: 'All Projects (6)' },
-    { id: 'E-Commerce', label: '🛒 E-Commerce & Retail' },
+    { id: 'Backend & Systems', label: '☕ Java & Spring Boot' },
+    { id: 'E-Commerce', label: '🛒 E-Commerce & Routing' },
     { id: 'Enterprise Systems', label: '🏢 Enterprise & Real-Time' },
-    { id: 'AI & Web Platforms', label: '🤖 AI & Smart Platforms' },
+    { id: 'AI & Web Platforms', label: '🤖 AI & Offline Apps' },
   ];
 
   return (
-    <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto scroll-mt-20">
       {/* Section Header */}
       <div className="text-center max-w-3xl mx-auto mb-12">
         <div className="inline-block">
           <RoughBadge variant="green" className="mb-3 text-sm">
-            Excalidraw UI Wireframe Showcase
+            Shipped Systems & Technical Blueprints
           </RoughBadge>
         </div>
         
@@ -40,18 +41,18 @@ export const ExcaliProjects: React.FC = () => {
           </span>
         </h2>
         <p className="font-sans text-stone-600 mt-2 text-sm sm:text-base">
-          Interactive wireframe cards of production platforms, booking systems, and generative AI interfaces.
+          Wireframe browser schematics of production client systems, Java REST services, and concurrency engines.
         </p>
 
         {/* Category Filters */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-8">
+        <div className="flex flex-wrap items-center justify-center gap-2 mt-7">
           {categories.map(cat => {
             const isActive = selectedCategory === cat.id;
             return (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-4 py-1.5 rounded-lg font-hand text-base font-bold transition-all border-2 border-stone-800 ${
+                className={`px-3.5 py-1.5 rounded-lg font-hand text-sm sm:text-base font-bold transition-all border-2 border-stone-800 ${
                   isActive
                     ? 'bg-stone-900 text-amber-300 shadow-sketch-sm translate-x-[1px] translate-y-[1px]'
                     : 'bg-white text-stone-700 hover:bg-stone-100 shadow-sketch'
@@ -90,7 +91,7 @@ export const ExcaliProjects: React.FC = () => {
                   <div className="flex-1 max-w-sm mx-2 bg-white border border-stone-400 rounded-md px-2.5 py-0.5 text-[11px] font-mono text-stone-600 truncate flex items-center gap-1.5 shadow-inner">
                     <Globe size={11} className="text-stone-400 flex-shrink-0" />
                     <span className="text-emerald-700 font-bold">https://</span>
-                    <span className="truncate">{project.liveUrl ? project.liveUrl.replace(/^https?:\/\//, '') : `${project.id}.systems.local`}</span>
+                    <span className="truncate">{project.liveUrl ? project.liveUrl.replace(/^https?:\/\//, '') : `${project.id}.backend.local`}</span>
                   </div>
 
                   <div className="text-[10px] font-mono text-stone-500 font-bold uppercase">
@@ -172,7 +173,7 @@ export const ExcaliProjects: React.FC = () => {
                 </button>
 
                 <div className="flex items-center gap-2">
-                  {project.liveUrl ? (
+                  {project.liveUrl && (
                     <a
                       href={project.liveUrl}
                       target="_blank"
@@ -182,7 +183,21 @@ export const ExcaliProjects: React.FC = () => {
                       <span>Live Site</span>
                       <ArrowUpRight size={14} />
                     </a>
-                  ) : (
+                  )}
+
+                  {project.githubUrl && (
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white hover:bg-stone-100 text-stone-900 border-2 border-stone-800 rounded-lg shadow-sketch font-hand text-sm font-bold transition-all active:translate-x-[1px] active:translate-y-[1px]"
+                    >
+                      <Github size={14} />
+                      <span>Code</span>
+                    </a>
+                  )}
+
+                  {!project.liveUrl && !project.githubUrl && (
                     <button
                       onClick={() => setActiveModalProject(project)}
                       className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white hover:bg-stone-100 text-stone-800 border-2 border-stone-800 rounded-lg shadow-sketch font-hand text-sm font-bold"

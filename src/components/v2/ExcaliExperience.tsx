@@ -8,7 +8,7 @@ export const ExcaliExperience: React.FC = () => {
   const { experience, certifications, achievements, personal } = PORTFOLIO_DATA;
 
   return (
-    <section id="experience" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <section id="experience" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto scroll-mt-20">
       {/* Section Header */}
       <div className="text-center max-w-3xl mx-auto mb-16">
         <div className="inline-block">

@@ -174,6 +174,17 @@ export const ExcaliProjectModal: React.FC<ExcaliProjectModalProps> = ({ project,
               </a>
             )}
 
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2 bg-stone-100 hover:bg-stone-200 text-stone-900 border-2 border-stone-800 rounded-lg shadow-sketch font-hand text-lg font-bold transition-all active:translate-x-[1px] active:translate-y-[1px]"
+              >
+                <span>View GitHub Code</span>
+              </a>
+            )}
+
             <button
               onClick={onClose}
               className="px-5 py-2 bg-white hover:bg-stone-100 text-stone-800 border-2 border-stone-800 rounded-lg shadow-sketch font-hand text-lg font-bold"
